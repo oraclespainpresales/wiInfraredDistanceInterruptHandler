@@ -127,6 +127,7 @@ var timer    = undefined;
 const PROCESS = 'PROCESS';
 const IOTCS   = 'IOTCS';
 const GROVEPI = 'GROVEPI';
+const TRANSPORTID = 12222;
 log.timestamp = true;
 
 // device class helper
@@ -266,7 +267,7 @@ async.series( {
           var infraredSensor = new GrovePi.sensors.base.Digital(3);
           log.verbose(GROVEPI, 'Infrared Distance Interrupt Sensor (start watch)')
           infraredSensor.on('change', function(res) {
-            var sensorData = { id: 1 };
+            var sensorData = { id: TRANSPORTID };
             sensorData.presence = (res != "1");
             var vd = grovepi.getIotVd(INFRAREDDISTANCEINTERRUPTSENSOR);
             if (vd) {
