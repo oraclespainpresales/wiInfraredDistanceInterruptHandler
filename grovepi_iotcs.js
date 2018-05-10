@@ -94,8 +94,7 @@ var storePassword = 'Welcome1';
 const INFRAREDDISTANCEINTERRUPTSENSOR = "urn:com:oracle:iot:device:grovepi:infrareddistanceinterrupt";
 
 var urn = [
-     LIGHTSENSOR
-//   , DHTSENSOR
+     INFRAREDDISTANCEINTERRUPTSENSOR
 ];
 var grovepi = new Device(GROVEPIDEV);
 const storeFile = options.device;
