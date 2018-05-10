@@ -1,0 +1,8 @@
+apps:
+  - script : grovepi_iotcs.js
+    name   : 'hackathonwrapper'
+    cwd    : '/home/pi/hackathonwrapper'
+    watch  : false
+    args   : '-d device.conf -s https://iotmadrid-usoracletrial03366.iot.us.oraclecloud.com -v'
+    env    :
+      NODE_PATH: /usr/lib/node_modules

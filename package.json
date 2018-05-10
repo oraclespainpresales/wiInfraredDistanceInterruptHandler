@@ -1,0 +1,28 @@
+{
+  "name": "hackathonwrapper",
+  "version": "1.0.0",
+  "description": "IoTCS wrapper for Integration Hackathon in Madrid",
+  "main": "grovepi_iotcs.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oraclespainpresales/hackathonwrapper.git"
+  },
+  "author": "Carlos Casares",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/oraclespainpresales/hackathonwrapper/issues"
+  },
+  "homepage": "https://github.com/oraclespainpresales/hackathonwrapper#readme",
+  "dependencies": {
+    "async": "^2.3.0",
+    "command-line-args": "^4.0.3",
+    "command-line-usage": "^4.0.0",
+    "lodash": "^4.17.4",
+    "node-grovepi": "^2.1.1",
+    "npmlog-ts": "0.0.1",
+    "restify": "^4.3.0"
+  }
+}

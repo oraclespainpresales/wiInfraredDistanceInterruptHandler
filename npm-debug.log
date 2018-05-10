@@ -1,0 +1,838 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/local/bin/node',
+1 verbose cli   '/usr/local/bin/npm',
+1 verbose cli   'install',
+1 verbose cli   'node-grovepi' ]
+2 info using npm@3.10.10
+3 info using node@v6.11.1
+4 silly loadCurrentTree Starting
+5 silly install loadCurrentTree
+6 silly install readLocalPackageData
+7 silly fetchPackageMetaData node-grovepi@^2.1.1
+8 silly fetchNamedPackageData node-grovepi
+9 silly mapToRegistry name node-grovepi
+10 silly mapToRegistry using default registry
+11 silly mapToRegistry registry https://registry.npmjs.org/
+12 silly mapToRegistry data Result {
+12 silly mapToRegistry   raw: 'node-grovepi',
+12 silly mapToRegistry   scope: null,
+12 silly mapToRegistry   escapedName: 'node-grovepi',
+12 silly mapToRegistry   name: 'node-grovepi',
+12 silly mapToRegistry   rawSpec: '',
+12 silly mapToRegistry   spec: 'latest',
+12 silly mapToRegistry   type: 'tag' }
+13 silly mapToRegistry uri https://registry.npmjs.org/node-grovepi
+14 verbose request uri https://registry.npmjs.org/node-grovepi
+15 verbose request no auth needed
+16 info attempt registry request try #1 at 6:30:08 PM
+17 verbose request id 9ec0a4f2b13c1d28
+18 verbose etag "5aa3b5b0-6a80"
+19 verbose lastModified Sat, 10 Mar 2018 10:38:40 GMT
+20 http request GET https://registry.npmjs.org/node-grovepi
+21 http 304 https://registry.npmjs.org/node-grovepi
+22 verbose headers { date: 'Thu, 10 May 2018 16:30:08 GMT',
+22 verbose headers   via: '1.1 varnish',
+22 verbose headers   'cache-control': 'max-age=300',
+22 verbose headers   etag: '"5aa3b5b0-6a80"',
+22 verbose headers   age: '149',
+22 verbose headers   connection: 'keep-alive',
+22 verbose headers   'x-served-by': 'cache-mad9439-MAD',
+22 verbose headers   'x-cache': 'HIT',
+22 verbose headers   'x-cache-hits': '1',
+22 verbose headers   'x-timer': 'S1525969809.669665,VS0,VE0',
+22 verbose headers   vary: 'Accept-Encoding, Accept' }
+23 silly get cb [ 304,
+23 silly get   { date: 'Thu, 10 May 2018 16:30:08 GMT',
+23 silly get     via: '1.1 varnish',
+23 silly get     'cache-control': 'max-age=300',
+23 silly get     etag: '"5aa3b5b0-6a80"',
+23 silly get     age: '149',
+23 silly get     connection: 'keep-alive',
+23 silly get     'x-served-by': 'cache-mad9439-MAD',
+23 silly get     'x-cache': 'HIT',
+23 silly get     'x-cache-hits': '1',
+23 silly get     'x-timer': 'S1525969809.669665,VS0,VE0',
+23 silly get     vary: 'Accept-Encoding, Accept' } ]
+24 verbose etag https://registry.npmjs.org/node-grovepi from cache
+25 verbose get saving node-grovepi to /Users/ccasares/.npm/registry.npmjs.org/node-grovepi/.cache.json
+26 verbose correctMkdir /Users/ccasares/.npm correctMkdir not in flight; initializing
+27 silly install normalizeTree
+28 silly loadCurrentTree Finishing
+29 silly loadIdealTree Starting
+30 silly install loadIdealTree
+31 silly cloneCurrentTree Starting
+32 silly install cloneCurrentTreeToIdealTree
+33 silly cloneCurrentTree Finishing
+34 silly loadShrinkwrap Starting
+35 silly install loadShrinkwrap
+36 silly loadShrinkwrap Finishing
+37 silly loadAllDepsIntoIdealTree Starting
+38 silly install loadAllDepsIntoIdealTree
+39 silly resolveWithNewModule node-grovepi@2.2.2 checking installable status
+40 silly cache add args [ 'node-grovepi@^2.1.1', null ]
+41 verbose cache add spec node-grovepi@^2.1.1
+42 silly cache add parsed spec Result {
+42 silly cache add   raw: 'node-grovepi@^2.1.1',
+42 silly cache add   scope: null,
+42 silly cache add   escapedName: 'node-grovepi',
+42 silly cache add   name: 'node-grovepi',
+42 silly cache add   rawSpec: '^2.1.1',
+42 silly cache add   spec: '>=2.1.1 <3.0.0',
+42 silly cache add   type: 'range' }
+43 silly addNamed node-grovepi@>=2.1.1 <3.0.0
+44 verbose addNamed ">=2.1.1 <3.0.0" is a valid semver range for node-grovepi
+45 silly addNameRange { name: 'node-grovepi', range: '>=2.1.1 <3.0.0', hasData: false }
+46 silly mapToRegistry name node-grovepi
+47 silly mapToRegistry using default registry
+48 silly mapToRegistry registry https://registry.npmjs.org/
+49 silly mapToRegistry data Result {
+49 silly mapToRegistry   raw: 'node-grovepi',
+49 silly mapToRegistry   scope: null,
+49 silly mapToRegistry   escapedName: 'node-grovepi',
+49 silly mapToRegistry   name: 'node-grovepi',
+49 silly mapToRegistry   rawSpec: '',
+49 silly mapToRegistry   spec: 'latest',
+49 silly mapToRegistry   type: 'tag' }
+50 silly mapToRegistry uri https://registry.npmjs.org/node-grovepi
+51 verbose addNameRange registry:https://registry.npmjs.org/node-grovepi not in flight; fetching
+52 verbose get https://registry.npmjs.org/node-grovepi not expired, no request
+53 silly addNameRange number 2 { name: 'node-grovepi', range: '>=2.1.1 <3.0.0', hasData: true }
+54 silly addNameRange versions [ 'node-grovepi',
+54 silly addNameRange   [ '1.0.0',
+54 silly addNameRange     '1.0.1',
+54 silly addNameRange     '1.0.2',
+54 silly addNameRange     '1.0.3',
+54 silly addNameRange     '1.0.4',
+54 silly addNameRange     '2.0.0',
+54 silly addNameRange     '2.0.1',
+54 silly addNameRange     '2.0.2',
+54 silly addNameRange     '2.0.3',
+54 silly addNameRange     '2.0.4',
+54 silly addNameRange     '2.0.5',
+54 silly addNameRange     '2.0.6',
+54 silly addNameRange     '2.0.7',
+54 silly addNameRange     '2.0.8',
+54 silly addNameRange     '2.0.9',
+54 silly addNameRange     '2.0.10',
+54 silly addNameRange     '2.0.11',
+54 silly addNameRange     '2.1.0',
+54 silly addNameRange     '2.1.1',
+54 silly addNameRange     '2.2.0',
+54 silly addNameRange     '2.2.1',
+54 silly addNameRange     '2.2.2' ] ]
+55 silly addNamed node-grovepi@2.2.2
+56 verbose addNamed "2.2.2" is a plain semver version for node-grovepi
+57 silly cache afterAdd node-grovepi@2.2.2
+58 verbose afterAdd /Users/ccasares/.npm/node-grovepi/2.2.2/package/package.json not in flight; writing
+59 verbose correctMkdir /Users/ccasares/.npm correctMkdir not in flight; initializing
+60 verbose afterAdd /Users/ccasares/.npm/node-grovepi/2.2.2/package/package.json written
+61 silly fetchNamedPackageData async
+62 silly mapToRegistry name async
+63 silly mapToRegistry using default registry
+64 silly mapToRegistry registry https://registry.npmjs.org/
+65 silly mapToRegistry data Result {
+65 silly mapToRegistry   raw: 'async',
+65 silly mapToRegistry   scope: null,
+65 silly mapToRegistry   escapedName: 'async',
+65 silly mapToRegistry   name: 'async',
+65 silly mapToRegistry   rawSpec: '',
+65 silly mapToRegistry   spec: 'latest',
+65 silly mapToRegistry   type: 'tag' }
+66 silly mapToRegistry uri https://registry.npmjs.org/async
+67 silly fetchNamedPackageData buffertools
+68 silly mapToRegistry name buffertools
+69 silly mapToRegistry using default registry
+70 silly mapToRegistry registry https://registry.npmjs.org/
+71 silly mapToRegistry data Result {
+71 silly mapToRegistry   raw: 'buffertools',
+71 silly mapToRegistry   scope: null,
+71 silly mapToRegistry   escapedName: 'buffertools',
+71 silly mapToRegistry   name: 'buffertools',
+71 silly mapToRegistry   rawSpec: '',
+71 silly mapToRegistry   spec: 'latest',
+71 silly mapToRegistry   type: 'tag' }
+72 silly mapToRegistry uri https://registry.npmjs.org/buffertools
+73 verbose request uri https://registry.npmjs.org/buffertools
+74 verbose request no auth needed
+75 info attempt registry request try #1 at 6:30:08 PM
+76 verbose etag "592eef2b-79f9"
+77 verbose lastModified Wed, 31 May 2017 16:28:27 GMT
+78 http request GET https://registry.npmjs.org/buffertools
+79 verbose request uri https://registry.npmjs.org/async
+80 verbose request no auth needed
+81 info attempt registry request try #1 at 6:30:08 PM
+82 verbose etag "5acd452e-235d2"
+83 verbose lastModified Tue, 10 Apr 2018 23:13:50 GMT
+84 http request GET https://registry.npmjs.org/async
+85 http 304 https://registry.npmjs.org/buffertools
+86 verbose headers { date: 'Thu, 10 May 2018 16:30:08 GMT',
+86 verbose headers   via: '1.1 varnish',
+86 verbose headers   'cache-control': 'max-age=300',
+86 verbose headers   etag: '"592eef2b-79f9"',
+86 verbose headers   age: '9733',
+86 verbose headers   connection: 'keep-alive',
+86 verbose headers   'x-served-by': 'cache-mad9439-MAD',
+86 verbose headers   'x-cache': 'HIT',
+86 verbose headers   'x-cache-hits': '1',
+86 verbose headers   'x-timer': 'S1525969809.766742,VS0,VE1',
+86 verbose headers   vary: 'Accept-Encoding, Accept' }
+87 silly get cb [ 304,
+87 silly get   { date: 'Thu, 10 May 2018 16:30:08 GMT',
+87 silly get     via: '1.1 varnish',
+87 silly get     'cache-control': 'max-age=300',
+87 silly get     etag: '"592eef2b-79f9"',
+87 silly get     age: '9733',
+87 silly get     connection: 'keep-alive',
+87 silly get     'x-served-by': 'cache-mad9439-MAD',
+87 silly get     'x-cache': 'HIT',
+87 silly get     'x-cache-hits': '1',
+87 silly get     'x-timer': 'S1525969809.766742,VS0,VE1',
+87 silly get     vary: 'Accept-Encoding, Accept' } ]
+88 verbose etag https://registry.npmjs.org/buffertools from cache
+89 verbose get saving buffertools to /Users/ccasares/.npm/registry.npmjs.org/buffertools/.cache.json
+90 verbose correctMkdir /Users/ccasares/.npm correctMkdir not in flight; initializing
+91 silly resolveWithNewModule buffertools@2.1.6 checking installable status
+92 silly cache add args [ 'buffertools@2.1.*', null ]
+93 verbose cache add spec buffertools@2.1.*
+94 silly cache add parsed spec Result {
+94 silly cache add   raw: 'buffertools@2.1.*',
+94 silly cache add   scope: null,
+94 silly cache add   escapedName: 'buffertools',
+94 silly cache add   name: 'buffertools',
+94 silly cache add   rawSpec: '2.1.*',
+94 silly cache add   spec: '>=2.1.0 <2.2.0',
+94 silly cache add   type: 'range' }
+95 silly addNamed buffertools@>=2.1.0 <2.2.0
+96 verbose addNamed ">=2.1.0 <2.2.0" is a valid semver range for buffertools
+97 silly addNameRange { name: 'buffertools', range: '>=2.1.0 <2.2.0', hasData: false }
+98 silly mapToRegistry name buffertools
+99 silly mapToRegistry using default registry
+100 silly mapToRegistry registry https://registry.npmjs.org/
+101 silly mapToRegistry data Result {
+101 silly mapToRegistry   raw: 'buffertools',
+101 silly mapToRegistry   scope: null,
+101 silly mapToRegistry   escapedName: 'buffertools',
+101 silly mapToRegistry   name: 'buffertools',
+101 silly mapToRegistry   rawSpec: '',
+101 silly mapToRegistry   spec: 'latest',
+101 silly mapToRegistry   type: 'tag' }
+102 silly mapToRegistry uri https://registry.npmjs.org/buffertools
+103 verbose addNameRange registry:https://registry.npmjs.org/buffertools not in flight; fetching
+104 verbose get https://registry.npmjs.org/buffertools not expired, no request
+105 silly addNameRange number 2 { name: 'buffertools', range: '>=2.1.0 <2.2.0', hasData: true }
+106 silly addNameRange versions [ 'buffertools',
+106 silly addNameRange   [ '1.0.0',
+106 silly addNameRange     '1.0.1',
+106 silly addNameRange     '1.0.2',
+106 silly addNameRange     '1.0.3',
+106 silly addNameRange     '1.0.4',
+106 silly addNameRange     '1.0.5',
+106 silly addNameRange     '1.0.6',
+106 silly addNameRange     '1.0.7',
+106 silly addNameRange     '1.0.8',
+106 silly addNameRange     '1.0.9',
+106 silly addNameRange     '1.1.0',
+106 silly addNameRange     '1.1.1',
+106 silly addNameRange     '2.0.0',
+106 silly addNameRange     '2.0.1',
+106 silly addNameRange     '2.1.0',
+106 silly addNameRange     '2.1.1',
+106 silly addNameRange     '2.1.2',
+106 silly addNameRange     '2.1.3',
+106 silly addNameRange     '2.1.4',
+106 silly addNameRange     '2.1.5',
+106 silly addNameRange     '2.1.6' ] ]
+107 silly addNamed buffertools@2.1.6
+108 verbose addNamed "2.1.6" is a plain semver version for buffertools
+109 silly cache afterAdd buffertools@2.1.6
+110 verbose afterAdd /Users/ccasares/.npm/buffertools/2.1.6/package/package.json not in flight; writing
+111 verbose correctMkdir /Users/ccasares/.npm correctMkdir not in flight; initializing
+112 verbose afterAdd /Users/ccasares/.npm/buffertools/2.1.6/package/package.json written
+113 http 304 https://registry.npmjs.org/async
+114 verbose headers { date: 'Thu, 10 May 2018 16:30:08 GMT',
+114 verbose headers   via: '1.1 varnish',
+114 verbose headers   'cache-control': 'max-age=300',
+114 verbose headers   etag: '"5acd452e-235d2"',
+114 verbose headers   age: '5530',
+114 verbose headers   connection: 'keep-alive',
+114 verbose headers   'x-served-by': 'cache-mad9443-MAD',
+114 verbose headers   'x-cache': 'HIT',
+114 verbose headers   'x-cache-hits': '22',
+114 verbose headers   'x-timer': 'S1525969809.787458,VS0,VE0',
+114 verbose headers   vary: 'Accept-Encoding, Accept' }
+115 silly get cb [ 304,
+115 silly get   { date: 'Thu, 10 May 2018 16:30:08 GMT',
+115 silly get     via: '1.1 varnish',
+115 silly get     'cache-control': 'max-age=300',
+115 silly get     etag: '"5acd452e-235d2"',
+115 silly get     age: '5530',
+115 silly get     connection: 'keep-alive',
+115 silly get     'x-served-by': 'cache-mad9443-MAD',
+115 silly get     'x-cache': 'HIT',
+115 silly get     'x-cache-hits': '22',
+115 silly get     'x-timer': 'S1525969809.787458,VS0,VE0',
+115 silly get     vary: 'Accept-Encoding, Accept' } ]
+116 verbose etag https://registry.npmjs.org/async from cache
+117 verbose get saving async to /Users/ccasares/.npm/registry.npmjs.org/async/.cache.json
+118 verbose correctMkdir /Users/ccasares/.npm correctMkdir not in flight; initializing
+119 silly resolveWithNewModule async@1.5.2 checking installable status
+120 silly cache add args [ 'async@1.*', null ]
+121 verbose cache add spec async@1.*
+122 silly cache add parsed spec Result {
+122 silly cache add   raw: 'async@1.*',
+122 silly cache add   scope: null,
+122 silly cache add   escapedName: 'async',
+122 silly cache add   name: 'async',
+122 silly cache add   rawSpec: '1.*',
+122 silly cache add   spec: '>=1.0.0 <2.0.0',
+122 silly cache add   type: 'range' }
+123 silly addNamed async@>=1.0.0 <2.0.0
+124 verbose addNamed ">=1.0.0 <2.0.0" is a valid semver range for async
+125 silly addNameRange { name: 'async', range: '>=1.0.0 <2.0.0', hasData: false }
+126 silly mapToRegistry name async
+127 silly mapToRegistry using default registry
+128 silly mapToRegistry registry https://registry.npmjs.org/
+129 silly mapToRegistry data Result {
+129 silly mapToRegistry   raw: 'async',
+129 silly mapToRegistry   scope: null,
+129 silly mapToRegistry   escapedName: 'async',
+129 silly mapToRegistry   name: 'async',
+129 silly mapToRegistry   rawSpec: '',
+129 silly mapToRegistry   spec: 'latest',
+129 silly mapToRegistry   type: 'tag' }
+130 silly mapToRegistry uri https://registry.npmjs.org/async
+131 verbose addNameRange registry:https://registry.npmjs.org/async not in flight; fetching
+132 verbose get https://registry.npmjs.org/async not expired, no request
+133 silly addNameRange number 2 { name: 'async', range: '>=1.0.0 <2.0.0', hasData: true }
+134 silly addNameRange versions [ 'async',
+134 silly addNameRange   [ '0.1.0',
+134 silly addNameRange     '0.1.1',
+134 silly addNameRange     '0.1.2',
+134 silly addNameRange     '0.1.3',
+134 silly addNameRange     '0.1.4',
+134 silly addNameRange     '0.1.5',
+134 silly addNameRange     '0.1.6',
+134 silly addNameRange     '0.1.7',
+134 silly addNameRange     '0.1.8',
+134 silly addNameRange     '0.1.9',
+134 silly addNameRange     '0.1.10',
+134 silly addNameRange     '0.1.11',
+134 silly addNameRange     '0.1.12',
+134 silly addNameRange     '0.1.13',
+134 silly addNameRange     '0.1.14',
+134 silly addNameRange     '0.1.15',
+134 silly addNameRange     '0.1.16',
+134 silly addNameRange     '0.1.17',
+134 silly addNameRange     '0.1.18',
+134 silly addNameRange     '0.1.19',
+134 silly addNameRange     '0.1.20',
+134 silly addNameRange     '0.1.21',
+134 silly addNameRange     '0.1.22',
+134 silly addNameRange     '0.2.0',
+134 silly addNameRange     '0.2.1',
+134 silly addNameRange     '0.2.2',
+134 silly addNameRange     '0.2.3',
+134 silly addNameRange     '0.2.4',
+134 silly addNameRange     '0.2.5',
+134 silly addNameRange     '0.2.6',
+134 silly addNameRange     '0.2.7',
+134 silly addNameRange     '0.2.8',
+134 silly addNameRange     '0.2.9',
+134 silly addNameRange     '0.2.10',
+134 silly addNameRange     '0.3.0',
+134 silly addNameRange     '0.4.0',
+134 silly addNameRange     '0.4.1',
+134 silly addNameRange     '0.5.0',
+134 silly addNameRange     '0.6.0',
+134 silly addNameRange     '0.6.1',
+134 silly addNameRange     '0.6.2',
+134 silly addNameRange     '0.7.0',
+134 silly addNameRange     '0.8.0',
+134 silly addNameRange     '0.9.0',
+134 silly addNameRange     '0.9.2',
+134 silly addNameRange     '1.0.0',
+134 silly addNameRange     '1.1.0',
+134 silly addNameRange     '1.2.0',
+134 silly addNameRange     '1.1.1',
+134 silly addNameRange     '1.2.1',
+134 silly addNameRange     '1.3.0',
+134 silly addNameRange     '1.4.0',
+134 silly addNameRange     '1.4.1',
+134 silly addNameRange     '1.4.2',
+134 silly addNameRange     '1.5.0',
+134 silly addNameRange     '1.5.1',
+134 silly addNameRange     '1.5.2',
+134 silly addNameRange     '2.0.0-alpha.0',
+134 silly addNameRange     '2.0.0-rc.1',
+134 silly addNameRange     '2.0.0-rc.2',
+134 silly addNameRange     '2.0.0-rc.3',
+134 silly addNameRange     '2.0.0-rc.4',
+134 silly addNameRange     '2.0.0-rc.5',
+134 silly addNameRange     '2.0.0-rc.6',
+134 silly addNameRange     '2.0.0',
+134 silly addNameRange     '2.0.1',
+134 silly addNameRange     '2.1.0',
+134 silly addNameRange     '2.1.1',
+134 silly addNameRange     '2.1.2',
+134 silly addNameRange     '2.1.4',
+134 silly addNameRange     '2.1.5',
+134 silly addNameRange     '2.2.0',
+134 silly addNameRange     '2.3.0',
+134 silly addNameRange     '2.4.0',
+134 silly addNameRange     '2.4.1',
+134 silly addNameRange     '2.5.0',
+134 silly addNameRange     '2.6.0' ] ]
+135 silly addNamed async@1.5.2
+136 verbose addNamed "1.5.2" is a plain semver version for async
+137 silly cache afterAdd async@1.5.2
+138 verbose afterAdd /Users/ccasares/.npm/async/1.5.2/package/package.json not in flight; writing
+139 verbose correctMkdir /Users/ccasares/.npm correctMkdir not in flight; initializing
+140 verbose afterAdd /Users/ccasares/.npm/async/1.5.2/package/package.json written
+141 silly loadAllDepsIntoIdealTree Finishing
+142 silly loadIdealTree Finishing
+143 silly currentTree hackathonwrapper@1.0.0
+143 silly currentTree ├── ansi-escape-sequences@4.0.0
+143 silly currentTree ├── ansi@0.3.1
+143 silly currentTree ├── are-we-there-yet@1.1.4
+143 silly currentTree ├── array-back@2.0.0
+143 silly currentTree ├── asn1@0.1.11
+143 silly currentTree ├── assert-plus@0.1.5
+143 silly currentTree ├── async@2.6.0
+143 silly currentTree ├── backoff@2.5.0
+143 silly currentTree ├── balanced-match@1.0.0
+143 silly currentTree ├── bindings@1.3.0
+143 silly currentTree ├── brace-expansion@1.1.11
+143 silly currentTree ├── bunyan@1.8.12
+143 silly currentTree ├── command-line-args@4.0.7
+143 silly currentTree ├── command-line-usage@4.1.0
+143 silly currentTree ├── complex.js@2.0.1
+143 silly currentTree ├── concat-map@0.0.1
+143 silly currentTree ├── core-util-is@1.0.2
+143 silly currentTree ├── csv-generate@0.0.6
+143 silly currentTree ├── csv-parse@1.3.3
+143 silly currentTree ├── csv-stringify@0.0.8
+143 silly currentTree ├── csv@0.4.6
+143 silly currentTree ├── ctype@0.5.3
+143 silly currentTree ├── debug@2.6.9
+143 silly currentTree ├── decimal.js@7.1.1
+143 silly currentTree ├── deep-extend@0.5.1
+143 silly currentTree ├── delegates@1.0.0
+143 silly currentTree ├── detect-node@2.0.3
+143 silly currentTree ├── dtrace-provider@0.8.6
+143 silly currentTree ├── escape-regexp-component@1.0.2
+143 silly currentTree ├── extsprintf@1.2.0
+143 silly currentTree ├─┬ find-replace@1.0.3
+143 silly currentTree │ └── array-back@1.0.4
+143 silly currentTree ├── formidable@1.2.1
+143 silly currentTree ├── fraction.js@4.0.0
+143 silly currentTree ├── gauge@1.2.7
+143 silly currentTree ├── glob@6.0.4
+143 silly currentTree ├── handle-thing@1.2.5
+143 silly currentTree ├── has-unicode@2.0.1
+143 silly currentTree ├── hpack.js@2.1.6
+143 silly currentTree ├── http-deceiver@1.2.7
+143 silly currentTree ├── http-signature@0.11.0
+143 silly currentTree ├── i2c-bus@1.2.5
+143 silly currentTree ├── inflight@1.0.6
+143 silly currentTree ├── inherits@2.0.3
+143 silly currentTree ├── isarray@1.0.0
+143 silly currentTree ├── keep-alive-agent@0.0.1
+143 silly currentTree ├── lodash.pad@4.5.1
+143 silly currentTree ├── lodash.padend@4.6.1
+143 silly currentTree ├── lodash.padstart@4.6.1
+143 silly currentTree ├── lodash@4.17.10
+143 silly currentTree ├── lru-cache@4.1.3
+143 silly currentTree ├── mathjs@3.10.3
+143 silly currentTree ├── mime@1.6.0
+143 silly currentTree ├── minimalistic-assert@1.0.1
+143 silly currentTree ├── minimatch@3.0.4
+143 silly currentTree ├── minimist@0.0.8
+143 silly currentTree ├── mkdirp@0.5.1
+143 silly currentTree ├── moment@2.22.1
+143 silly currentTree ├── ms@2.0.0
+143 silly currentTree ├── mv@2.1.1
+143 silly currentTree ├── nan@2.8.0
+143 silly currentTree ├── ncp@2.0.0
+143 silly currentTree ├── negotiator@0.6.1
+143 silly currentTree ├── npmlog-ts@0.0.1
+143 silly currentTree ├── npmlog@2.0.4
+143 silly currentTree ├── obuf@1.1.2
+143 silly currentTree ├── once@1.4.0
+143 silly currentTree ├── path-is-absolute@1.0.1
+143 silly currentTree ├── precond@0.2.3
+143 silly currentTree ├── process-nextick-args@2.0.0
+143 silly currentTree ├── pseudomap@1.0.2
+143 silly currentTree ├── qs@6.5.2
+143 silly currentTree ├── readable-stream@2.3.6
+143 silly currentTree ├── reduce-flatten@1.0.1
+143 silly currentTree ├── restify@4.3.3
+143 silly currentTree ├── rimraf@2.4.5
+143 silly currentTree ├── safe-buffer@5.1.2
+143 silly currentTree ├── safe-json-stringify@1.1.0
+143 silly currentTree ├── seed-random@2.2.0
+143 silly currentTree ├── select-hose@2.0.0
+143 silly currentTree ├── semver@4.3.6
+143 silly currentTree ├── sleep@3.0.1
+143 silly currentTree ├── spdy-transport@2.1.0
+143 silly currentTree ├── spdy@3.4.7
+143 silly currentTree ├── stream-transform@0.1.2
+143 silly currentTree ├── string_decoder@1.1.1
+143 silly currentTree ├── table-layout@0.4.3
+143 silly currentTree ├─┬ test-value@2.1.0
+143 silly currentTree │ └── array-back@1.0.4
+143 silly currentTree ├── tiny-emitter@1.0.2
+143 silly currentTree ├── tunnel-agent@0.4.3
+143 silly currentTree ├── typed-function@0.10.5
+143 silly currentTree ├── typical@2.6.1
+143 silly currentTree ├── util-deprecate@1.0.2
+143 silly currentTree ├── uuid@3.2.1
+143 silly currentTree ├─┬ vasync@1.6.3
+143 silly currentTree │ └── verror@1.6.0
+143 silly currentTree ├─┬ verror@1.10.0
+143 silly currentTree │ └── assert-plus@1.0.0
+143 silly currentTree ├── wbuf@1.7.3
+143 silly currentTree ├── wordwrapjs@3.0.0
+143 silly currentTree ├── wrappy@1.0.2
+143 silly currentTree └── yallist@2.1.2
+144 silly idealTree hackathonwrapper@1.0.0
+144 silly idealTree ├── ansi-escape-sequences@4.0.0
+144 silly idealTree ├── ansi@0.3.1
+144 silly idealTree ├── are-we-there-yet@1.1.4
+144 silly idealTree ├── array-back@2.0.0
+144 silly idealTree ├── asn1@0.1.11
+144 silly idealTree ├── assert-plus@0.1.5
+144 silly idealTree ├── async@2.6.0
+144 silly idealTree ├── backoff@2.5.0
+144 silly idealTree ├── balanced-match@1.0.0
+144 silly idealTree ├── bindings@1.3.0
+144 silly idealTree ├── brace-expansion@1.1.11
+144 silly idealTree ├── buffertools@2.1.6
+144 silly idealTree ├── bunyan@1.8.12
+144 silly idealTree ├── command-line-args@4.0.7
+144 silly idealTree ├── command-line-usage@4.1.0
+144 silly idealTree ├── complex.js@2.0.1
+144 silly idealTree ├── concat-map@0.0.1
+144 silly idealTree ├── core-util-is@1.0.2
+144 silly idealTree ├── csv-generate@0.0.6
+144 silly idealTree ├── csv-parse@1.3.3
+144 silly idealTree ├── csv-stringify@0.0.8
+144 silly idealTree ├── csv@0.4.6
+144 silly idealTree ├── ctype@0.5.3
+144 silly idealTree ├── debug@2.6.9
+144 silly idealTree ├── decimal.js@7.1.1
+144 silly idealTree ├── deep-extend@0.5.1
+144 silly idealTree ├── delegates@1.0.0
+144 silly idealTree ├── detect-node@2.0.3
+144 silly idealTree ├── dtrace-provider@0.8.6
+144 silly idealTree ├── escape-regexp-component@1.0.2
+144 silly idealTree ├── extsprintf@1.2.0
+144 silly idealTree ├─┬ find-replace@1.0.3
+144 silly idealTree │ └── array-back@1.0.4
+144 silly idealTree ├── formidable@1.2.1
+144 silly idealTree ├── fraction.js@4.0.0
+144 silly idealTree ├── gauge@1.2.7
+144 silly idealTree ├── glob@6.0.4
+144 silly idealTree ├── handle-thing@1.2.5
+144 silly idealTree ├── has-unicode@2.0.1
+144 silly idealTree ├── hpack.js@2.1.6
+144 silly idealTree ├── http-deceiver@1.2.7
+144 silly idealTree ├── http-signature@0.11.0
+144 silly idealTree ├── i2c-bus@1.2.5
+144 silly idealTree ├── inflight@1.0.6
+144 silly idealTree ├── inherits@2.0.3
+144 silly idealTree ├── isarray@1.0.0
+144 silly idealTree ├── keep-alive-agent@0.0.1
+144 silly idealTree ├── lodash.pad@4.5.1
+144 silly idealTree ├── lodash.padend@4.6.1
+144 silly idealTree ├── lodash.padstart@4.6.1
+144 silly idealTree ├── lodash@4.17.10
+144 silly idealTree ├── lru-cache@4.1.3
+144 silly idealTree ├── mathjs@3.10.3
+144 silly idealTree ├── mime@1.6.0
+144 silly idealTree ├── minimalistic-assert@1.0.1
+144 silly idealTree ├── minimatch@3.0.4
+144 silly idealTree ├── minimist@0.0.8
+144 silly idealTree ├── mkdirp@0.5.1
+144 silly idealTree ├── moment@2.22.1
+144 silly idealTree ├── ms@2.0.0
+144 silly idealTree ├── mv@2.1.1
+144 silly idealTree ├── nan@2.8.0
+144 silly idealTree ├── ncp@2.0.0
+144 silly idealTree ├── negotiator@0.6.1
+144 silly idealTree ├─┬ node-grovepi@2.2.2
+144 silly idealTree │ └── async@1.5.2
+144 silly idealTree ├── npmlog-ts@0.0.1
+144 silly idealTree ├── npmlog@2.0.4
+144 silly idealTree ├── obuf@1.1.2
+144 silly idealTree ├── once@1.4.0
+144 silly idealTree ├── path-is-absolute@1.0.1
+144 silly idealTree ├── precond@0.2.3
+144 silly idealTree ├── process-nextick-args@2.0.0
+144 silly idealTree ├── pseudomap@1.0.2
+144 silly idealTree ├── qs@6.5.2
+144 silly idealTree ├── readable-stream@2.3.6
+144 silly idealTree ├── reduce-flatten@1.0.1
+144 silly idealTree ├── restify@4.3.3
+144 silly idealTree ├── rimraf@2.4.5
+144 silly idealTree ├── safe-buffer@5.1.2
+144 silly idealTree ├── safe-json-stringify@1.1.0
+144 silly idealTree ├── seed-random@2.2.0
+144 silly idealTree ├── select-hose@2.0.0
+144 silly idealTree ├── semver@4.3.6
+144 silly idealTree ├── sleep@3.0.1
+144 silly idealTree ├── spdy-transport@2.1.0
+144 silly idealTree ├── spdy@3.4.7
+144 silly idealTree ├── stream-transform@0.1.2
+144 silly idealTree ├── string_decoder@1.1.1
+144 silly idealTree ├── table-layout@0.4.3
+144 silly idealTree ├─┬ test-value@2.1.0
+144 silly idealTree │ └── array-back@1.0.4
+144 silly idealTree ├── tiny-emitter@1.0.2
+144 silly idealTree ├── tunnel-agent@0.4.3
+144 silly idealTree ├── typed-function@0.10.5
+144 silly idealTree ├── typical@2.6.1
+144 silly idealTree ├── util-deprecate@1.0.2
+144 silly idealTree ├── uuid@3.2.1
+144 silly idealTree ├─┬ vasync@1.6.3
+144 silly idealTree │ └── verror@1.6.0
+144 silly idealTree ├─┬ verror@1.10.0
+144 silly idealTree │ └── assert-plus@1.0.0
+144 silly idealTree ├── wbuf@1.7.3
+144 silly idealTree ├── wordwrapjs@3.0.0
+144 silly idealTree ├── wrappy@1.0.2
+144 silly idealTree └── yallist@2.1.2
+145 silly generateActionsToTake Starting
+146 silly install generateActionsToTake
+147 silly generateActionsToTake Finishing
+148 silly diffTrees action count 3
+149 silly diffTrees add buffertools@2.1.6
+150 silly diffTrees add async@1.5.2
+151 silly diffTrees add node-grovepi@2.2.2
+152 silly decomposeActions action count 24
+153 silly decomposeActions fetch buffertools@2.1.6
+154 silly decomposeActions extract buffertools@2.1.6
+155 silly decomposeActions test buffertools@2.1.6
+156 silly decomposeActions preinstall buffertools@2.1.6
+157 silly decomposeActions build buffertools@2.1.6
+158 silly decomposeActions install buffertools@2.1.6
+159 silly decomposeActions postinstall buffertools@2.1.6
+160 silly decomposeActions finalize buffertools@2.1.6
+161 silly decomposeActions fetch async@1.5.2
+162 silly decomposeActions extract async@1.5.2
+163 silly decomposeActions test async@1.5.2
+164 silly decomposeActions preinstall async@1.5.2
+165 silly decomposeActions build async@1.5.2
+166 silly decomposeActions install async@1.5.2
+167 silly decomposeActions postinstall async@1.5.2
+168 silly decomposeActions finalize async@1.5.2
+169 silly decomposeActions fetch node-grovepi@2.2.2
+170 silly decomposeActions extract node-grovepi@2.2.2
+171 silly decomposeActions test node-grovepi@2.2.2
+172 silly decomposeActions preinstall node-grovepi@2.2.2
+173 silly decomposeActions build node-grovepi@2.2.2
+174 silly decomposeActions install node-grovepi@2.2.2
+175 silly decomposeActions postinstall node-grovepi@2.2.2
+176 silly decomposeActions finalize node-grovepi@2.2.2
+177 silly runTopLevelLifecycles Starting
+178 silly executeActions Starting
+179 silly install executeActions
+180 silly doSerial global-install 0
+181 silly doParallel fetch 3
+182 verbose correctMkdir /Users/ccasares/.npm/_locks correctMkdir not in flight; initializing
+183 verbose lock using /Users/ccasares/.npm/_locks/staging-4e16badb0fe2422e.lock for /Users/ccasares/Documents/jdeveloper/mywork/NODE/WEDO/wiInfraredDistanceInterruptHandler/node_modules/.staging
+184 silly doParallel extract 3
+185 silly extract buffertools@2.1.6
+186 silly extract async@1.5.2
+187 silly extract node-grovepi@2.2.2
+188 verbose unbuild node_modules/.staging/buffertools-6e052f8f
+189 verbose unbuild node_modules/.staging/async-623d7b5c
+190 verbose unbuild node_modules/.staging/node-grovepi-0d9950f4
+191 silly gentlyRm /Users/ccasares/Documents/jdeveloper/mywork/NODE/WEDO/wiInfraredDistanceInterruptHandler/node_modules/.staging/buffertools-6e052f8f is being purged from base /Users/ccasares/Documents/jdeveloper/mywork/NODE/WEDO/wiInfraredDistanceInterruptHandler
+192 verbose gentlyRm don't care about contents; nuking /Users/ccasares/Documents/jdeveloper/mywork/NODE/WEDO/wiInfraredDistanceInterruptHandler/node_modules/.staging/buffertools-6e052f8f
+193 silly gentlyRm /Users/ccasares/Documents/jdeveloper/mywork/NODE/WEDO/wiInfraredDistanceInterruptHandler/node_modules/.staging/async-623d7b5c is being purged from base /Users/ccasares/Documents/jdeveloper/mywork/NODE/WEDO/wiInfraredDistanceInterruptHandler
+194 verbose gentlyRm don't care about contents; nuking /Users/ccasares/Documents/jdeveloper/mywork/NODE/WEDO/wiInfraredDistanceInterruptHandler/node_modules/.staging/async-623d7b5c
+195 silly gentlyRm /Users/ccasares/Documents/jdeveloper/mywork/NODE/WEDO/wiInfraredDistanceInterruptHandler/node_modules/.staging/node-grovepi-0d9950f4 is being purged from base /Users/ccasares/Documents/jdeveloper/mywork/NODE/WEDO/wiInfraredDistanceInterruptHandler
+196 verbose gentlyRm don't care about contents; nuking /Users/ccasares/Documents/jdeveloper/mywork/NODE/WEDO/wiInfraredDistanceInterruptHandler/node_modules/.staging/node-grovepi-0d9950f4
+197 verbose tar unpack /Users/ccasares/.npm/buffertools/2.1.6/package.tgz
+198 verbose tar unpacking to /Users/ccasares/Documents/jdeveloper/mywork/NODE/WEDO/wiInfraredDistanceInterruptHandler/node_modules/.staging/buffertools-6e052f8f
+199 silly gentlyRm /Users/ccasares/Documents/jdeveloper/mywork/NODE/WEDO/wiInfraredDistanceInterruptHandler/node_modules/.staging/buffertools-6e052f8f is being purged
+200 verbose gentlyRm don't care about contents; nuking /Users/ccasares/Documents/jdeveloper/mywork/NODE/WEDO/wiInfraredDistanceInterruptHandler/node_modules/.staging/buffertools-6e052f8f
+201 verbose tar unpack /Users/ccasares/.npm/async/1.5.2/package.tgz
+202 verbose tar unpacking to /Users/ccasares/Documents/jdeveloper/mywork/NODE/WEDO/wiInfraredDistanceInterruptHandler/node_modules/.staging/async-623d7b5c
+203 silly gentlyRm /Users/ccasares/Documents/jdeveloper/mywork/NODE/WEDO/wiInfraredDistanceInterruptHandler/node_modules/.staging/async-623d7b5c is being purged
+204 verbose gentlyRm don't care about contents; nuking /Users/ccasares/Documents/jdeveloper/mywork/NODE/WEDO/wiInfraredDistanceInterruptHandler/node_modules/.staging/async-623d7b5c
+205 verbose tar unpack /Users/ccasares/.npm/node-grovepi/2.2.2/package.tgz
+206 verbose tar unpacking to /Users/ccasares/Documents/jdeveloper/mywork/NODE/WEDO/wiInfraredDistanceInterruptHandler/node_modules/.staging/node-grovepi-0d9950f4
+207 silly gentlyRm /Users/ccasares/Documents/jdeveloper/mywork/NODE/WEDO/wiInfraredDistanceInterruptHandler/node_modules/.staging/node-grovepi-0d9950f4 is being purged
+208 verbose gentlyRm don't care about contents; nuking /Users/ccasares/Documents/jdeveloper/mywork/NODE/WEDO/wiInfraredDistanceInterruptHandler/node_modules/.staging/node-grovepi-0d9950f4
+209 silly gunzTarPerm modes [ '755', '644' ]
+210 silly gunzTarPerm modes [ '755', '644' ]
+211 silly gunzTarPerm modes [ '755', '644' ]
+212 silly gunzTarPerm extractEntry package.json
+213 silly gunzTarPerm extractEntry package.json
+214 silly gunzTarPerm modified mode [ 'package.json', 436, 420 ]
+215 silly gunzTarPerm extractEntry package.json
+216 silly gunzTarPerm modified mode [ 'package.json', 511, 493 ]
+217 silly gunzTarPerm extractEntry .npmignore
+218 silly gunzTarPerm extractEntry README.md
+219 silly gunzTarPerm extractEntry README.md
+220 silly gunzTarPerm modified mode [ 'README.md', 436, 420 ]
+221 silly gunzTarPerm extractEntry commands.js
+222 silly gunzTarPerm modified mode [ 'commands.js', 511, 493 ]
+223 silly gunzTarPerm extractEntry grovepi.js
+224 silly gunzTarPerm modified mode [ 'grovepi.js', 511, 493 ]
+225 silly gunzTarPerm extractEntry LICENSE
+226 silly gunzTarPerm modified mode [ 'LICENSE', 436, 420 ]
+227 silly gunzTarPerm extractEntry CHANGELOG.md
+228 silly gunzTarPerm modified mode [ 'CHANGELOG.md', 436, 420 ]
+229 silly gunzTarPerm extractEntry dist/async.js
+230 silly gunzTarPerm modified mode [ 'dist/async.js', 436, 420 ]
+231 silly gunzTarPerm extractEntry dist/async.min.js
+232 silly gunzTarPerm modified mode [ 'dist/async.min.js', 436, 420 ]
+233 silly gunzTarPerm extractEntry LICENSE
+234 silly gunzTarPerm extractEntry buffertools.js
+235 silly gunzTarPerm extractEntry index.js
+236 silly gunzTarPerm modified mode [ 'index.js', 511, 493 ]
+237 silly gunzTarPerm extractEntry sensors/accelerationI2cSensor.js
+238 silly gunzTarPerm modified mode [ 'sensors/accelerationI2cSensor.js', 511, 493 ]
+239 silly gunzTarPerm extractEntry lib/async.js
+240 silly gunzTarPerm modified mode [ 'lib/async.js', 436, 420 ]
+241 silly gunzTarPerm extractEntry test.js
+242 silly gunzTarPerm extractEntry binding.gyp
+243 silly gunzTarPerm extractEntry buffertools.cc
+244 silly gunzTarPerm extractEntry BoyerMoore.h
+245 silly gunzTarPerm extractEntry AUTHORS
+246 silly gunzTarPerm extractEntry .mailmap
+247 silly gunzTarPerm extractEntry sensors/airQualityAnalogSensor.js
+248 silly gunzTarPerm modified mode [ 'sensors/airQualityAnalogSensor.js', 511, 493 ]
+249 silly gunzTarPerm extractEntry sensors/base/analogSensor.js
+250 silly gunzTarPerm modified mode [ 'sensors/base/analogSensor.js', 511, 493 ]
+251 silly gunzTarPerm extractEntry sensors/base/digitalSensor.js
+252 silly gunzTarPerm modified mode [ 'sensors/base/digitalSensor.js', 511, 493 ]
+253 silly gunzTarPerm extractEntry sensors/base/i2cSensor.js
+254 silly gunzTarPerm modified mode [ 'sensors/base/i2cSensor.js', 511, 493 ]
+255 silly gunzTarPerm extractEntry sensors/base/sensor.js
+256 silly gunzTarPerm modified mode [ 'sensors/base/sensor.js', 511, 493 ]
+257 silly gunzTarPerm extractEntry sensors/chainableRGBLedDigitalSensor.js
+258 silly gunzTarPerm modified mode [ 'sensors/chainableRGBLedDigitalSensor.js', 511, 493 ]
+259 silly gunzTarPerm extractEntry sensors/DHTDigitalSensor.js
+260 silly gunzTarPerm modified mode [ 'sensors/DHTDigitalSensor.js', 511, 493 ]
+261 silly gunzTarPerm extractEntry sensors/digitalButton.js
+262 silly gunzTarPerm modified mode [ 'sensors/digitalButton.js', 511, 493 ]
+263 silly gunzTarPerm extractEntry sensors/dustDigitalSensor.js
+264 silly gunzTarPerm modified mode [ 'sensors/dustDigitalSensor.js', 511, 493 ]
+265 silly gunzTarPerm extractEntry sensors/encoderDigitalSensor.js
+266 silly gunzTarPerm modified mode [ 'sensors/encoderDigitalSensor.js', 511, 493 ]
+267 silly gunzTarPerm extractEntry sensors/fourDigitDigitalSensor.js
+268 silly gunzTarPerm modified mode [ 'sensors/fourDigitDigitalSensor.js', 511, 493 ]
+269 silly gunzTarPerm extractEntry sensors/genericDigitalInputSensor.js
+270 silly gunzTarPerm modified mode [ 'sensors/genericDigitalInputSensor.js', 511, 493 ]
+271 silly gunzTarPerm extractEntry sensors/genericDigitalOutputSensor.js
+272 silly gunzTarPerm modified mode [ 'sensors/genericDigitalOutputSensor.js', 511, 493 ]
+273 silly gunzTarPerm extractEntry sensors/helpers.js
+274 silly gunzTarPerm modified mode [ 'sensors/helpers.js', 511, 493 ]
+275 silly gunzTarPerm extractEntry sensors/IRReceiverSensor.js
+276 silly gunzTarPerm modified mode [ 'sensors/IRReceiverSensor.js', 511, 493 ]
+277 silly gunzTarPerm extractEntry sensors/ledBarDigitalSensor.js
+278 silly gunzTarPerm modified mode [ 'sensors/ledBarDigitalSensor.js', 511, 493 ]
+279 silly gunzTarPerm extractEntry sensors/lightAnalogSensor.js
+280 silly gunzTarPerm modified mode [ 'sensors/lightAnalogSensor.js', 511, 493 ]
+281 silly gunzTarPerm extractEntry sensors/loudnessAnalogSensor.js
+282 silly gunzTarPerm modified mode [ 'sensors/loudnessAnalogSensor.js', 511, 493 ]
+283 silly gunzTarPerm extractEntry sensors/rotaryAngleAnalogSensor.js
+284 silly gunzTarPerm modified mode [ 'sensors/rotaryAngleAnalogSensor.js', 511, 493 ]
+285 silly gunzTarPerm extractEntry sensors/rtcI2cSensor.js
+286 silly gunzTarPerm modified mode [ 'sensors/rtcI2cSensor.js', 511, 493 ]
+287 silly gunzTarPerm extractEntry sensors/SPDTRelay.js
+288 silly gunzTarPerm modified mode [ 'sensors/SPDTRelay.js', 511, 493 ]
+289 silly gunzTarPerm extractEntry sensors/temperatureAnalogSensor.js
+290 silly gunzTarPerm modified mode [ 'sensors/temperatureAnalogSensor.js', 511, 493 ]
+291 silly gunzTarPerm extractEntry sensors/ultrasonicDigitalSensor.js
+292 silly gunzTarPerm modified mode [ 'sensors/ultrasonicDigitalSensor.js', 511, 493 ]
+293 silly gunzTarPerm extractEntry sensors/waterFlowDigitalSensor.js
+294 silly gunzTarPerm modified mode [ 'sensors/waterFlowDigitalSensor.js', 511, 493 ]
+295 silly gentlyRm /Users/ccasares/Documents/jdeveloper/mywork/NODE/WEDO/wiInfraredDistanceInterruptHandler/node_modules/.staging/async-623d7b5c/node_modules is being purged
+296 verbose gentlyRm don't care about contents; nuking /Users/ccasares/Documents/jdeveloper/mywork/NODE/WEDO/wiInfraredDistanceInterruptHandler/node_modules/.staging/async-623d7b5c/node_modules
+297 silly gentlyRm /Users/ccasares/Documents/jdeveloper/mywork/NODE/WEDO/wiInfraredDistanceInterruptHandler/node_modules/.staging/buffertools-6e052f8f/node_modules is being purged
+298 verbose gentlyRm don't care about contents; nuking /Users/ccasares/Documents/jdeveloper/mywork/NODE/WEDO/wiInfraredDistanceInterruptHandler/node_modules/.staging/buffertools-6e052f8f/node_modules
+299 silly gentlyRm /Users/ccasares/Documents/jdeveloper/mywork/NODE/WEDO/wiInfraredDistanceInterruptHandler/node_modules/.staging/node-grovepi-0d9950f4/node_modules is being purged
+300 verbose gentlyRm don't care about contents; nuking /Users/ccasares/Documents/jdeveloper/mywork/NODE/WEDO/wiInfraredDistanceInterruptHandler/node_modules/.staging/node-grovepi-0d9950f4/node_modules
+301 silly doParallel preinstall 3
+302 silly preinstall buffertools@2.1.6 /Users/ccasares/Documents/jdeveloper/mywork/NODE/WEDO/wiInfraredDistanceInterruptHandler/node_modules/.staging/buffertools-6e052f8f
+303 info lifecycle buffertools@2.1.6~preinstall: buffertools@2.1.6
+304 silly preinstall async@1.5.2 /Users/ccasares/Documents/jdeveloper/mywork/NODE/WEDO/wiInfraredDistanceInterruptHandler/node_modules/.staging/async-623d7b5c
+305 info lifecycle async@1.5.2~preinstall: async@1.5.2
+306 silly preinstall node-grovepi@2.2.2 /Users/ccasares/Documents/jdeveloper/mywork/NODE/WEDO/wiInfraredDistanceInterruptHandler/node_modules/.staging/node-grovepi-0d9950f4
+307 info lifecycle node-grovepi@2.2.2~preinstall: node-grovepi@2.2.2
+308 silly lifecycle buffertools@2.1.6~preinstall: no script for preinstall, continuing
+309 silly lifecycle async@1.5.2~preinstall: no script for preinstall, continuing
+310 silly lifecycle node-grovepi@2.2.2~preinstall: no script for preinstall, continuing
+311 silly doReverseSerial remove 0
+312 silly doSerial move 0
+313 silly doSerial finalize 3
+314 silly finalize /Users/ccasares/Documents/jdeveloper/mywork/NODE/WEDO/wiInfraredDistanceInterruptHandler/node_modules/buffertools
+315 silly finalize /Users/ccasares/Documents/jdeveloper/mywork/NODE/WEDO/wiInfraredDistanceInterruptHandler/node_modules/node-grovepi/node_modules/async
+316 silly finalize /Users/ccasares/Documents/jdeveloper/mywork/NODE/WEDO/wiInfraredDistanceInterruptHandler/node_modules/node-grovepi
+317 silly doSerial build 3
+318 silly build buffertools@2.1.6
+319 info linkStuff buffertools@2.1.6
+320 silly linkStuff buffertools@2.1.6 has /Users/ccasares/Documents/jdeveloper/mywork/NODE/WEDO/wiInfraredDistanceInterruptHandler/node_modules as its parent node_modules
+321 verbose linkBins buffertools@2.1.6
+322 verbose linkMans buffertools@2.1.6
+323 silly build async@1.5.2
+324 info linkStuff async@1.5.2
+325 silly linkStuff async@1.5.2 has /Users/ccasares/Documents/jdeveloper/mywork/NODE/WEDO/wiInfraredDistanceInterruptHandler/node_modules/node-grovepi/node_modules as its parent node_modules
+326 verbose linkBins async@1.5.2
+327 verbose linkMans async@1.5.2
+328 silly build node-grovepi@2.2.2
+329 info linkStuff node-grovepi@2.2.2
+330 silly linkStuff node-grovepi@2.2.2 has /Users/ccasares/Documents/jdeveloper/mywork/NODE/WEDO/wiInfraredDistanceInterruptHandler/node_modules as its parent node_modules
+331 verbose linkBins node-grovepi@2.2.2
+332 verbose linkMans node-grovepi@2.2.2
+333 silly doSerial global-link 0
+334 silly doParallel update-linked 0
+335 silly doSerial install 3
+336 silly install buffertools@2.1.6 /Users/ccasares/Documents/jdeveloper/mywork/NODE/WEDO/wiInfraredDistanceInterruptHandler/node_modules/.staging/buffertools-6e052f8f
+337 info lifecycle buffertools@2.1.6~install: buffertools@2.1.6
+338 verbose lifecycle buffertools@2.1.6~install: unsafe-perm in lifecycle true
+339 verbose lifecycle buffertools@2.1.6~install: PATH: /usr/local/lib/node_modules/npm/bin/node-gyp-bin:/Users/ccasares/Documents/jdeveloper/mywork/NODE/WEDO/wiInfraredDistanceInterruptHandler/node_modules/buffertools/node_modules/.bin:/Users/ccasares/Documents/jdeveloper/mywork/NODE/WEDO/wiInfraredDistanceInterruptHandler/node_modules/.bin:/Library/Frameworks/Python.framework/Versions/3.6/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/opt/X11/bin
+340 verbose lifecycle buffertools@2.1.6~install: CWD: /Users/ccasares/Documents/jdeveloper/mywork/NODE/WEDO/wiInfraredDistanceInterruptHandler/node_modules/buffertools
+341 silly lifecycle buffertools@2.1.6~install: Args: [ '-c', 'node-gyp rebuild' ]
+342 silly lifecycle buffertools@2.1.6~install: Returned: code: 1  signal: null
+343 info lifecycle buffertools@2.1.6~install: Failed to exec install script
+344 verbose unlock done using /Users/ccasares/.npm/_locks/staging-4e16badb0fe2422e.lock for /Users/ccasares/Documents/jdeveloper/mywork/NODE/WEDO/wiInfraredDistanceInterruptHandler/node_modules/.staging
+345 silly rollbackFailedOptional Starting
+346 silly rollbackFailedOptional Finishing
+347 silly runTopLevelLifecycles Finishing
+348 silly install printInstalled
+349 verbose stack Error: buffertools@2.1.6 install: `node-gyp rebuild`
+349 verbose stack Exit status 1
+349 verbose stack     at EventEmitter.<anonymous> (/usr/local/lib/node_modules/npm/lib/utils/lifecycle.js:255:16)
+349 verbose stack     at emitTwo (events.js:106:13)
+349 verbose stack     at EventEmitter.emit (events.js:191:7)
+349 verbose stack     at ChildProcess.<anonymous> (/usr/local/lib/node_modules/npm/lib/utils/spawn.js:40:14)
+349 verbose stack     at emitTwo (events.js:106:13)
+349 verbose stack     at ChildProcess.emit (events.js:191:7)
+349 verbose stack     at maybeClose (internal/child_process.js:891:16)
+349 verbose stack     at Process.ChildProcess._handle.onexit (internal/child_process.js:226:5)
+350 verbose pkgid buffertools@2.1.6
+351 verbose cwd /Users/ccasares/Documents/jdeveloper/mywork/NODE/WEDO/wiInfraredDistanceInterruptHandler
+352 error Darwin 17.5.0
+353 error argv "/usr/local/bin/node" "/usr/local/bin/npm" "install" "node-grovepi"
+354 error node v6.11.1
+355 error npm  v3.10.10
+356 error code ELIFECYCLE
+357 error buffertools@2.1.6 install: `node-gyp rebuild`
+357 error Exit status 1
+358 error Failed at the buffertools@2.1.6 install script 'node-gyp rebuild'.
+358 error Make sure you have the latest version of node.js and npm installed.
+358 error If you do, this is most likely a problem with the buffertools package,
+358 error not with npm itself.
+358 error Tell the author that this fails on your system:
+358 error     node-gyp rebuild
+358 error You can get information on how to open an issue for this project with:
+358 error     npm bugs buffertools
+358 error Or if that isn't available, you can get their info via:
+358 error     npm owner ls buffertools
+358 error There is likely additional logging output above.
+359 verbose exit [ 1, true ]
