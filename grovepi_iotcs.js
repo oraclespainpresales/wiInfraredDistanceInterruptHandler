@@ -262,60 +262,17 @@ async.series( {
       onInit: function(res) {
         if (res) {
           log.verbose(GROVEPI, 'GrovePi Version :: ' + board.version());
-          /**
-          log.verbose(GROVEPI, "Looking for DHT sensor at digital port #3");
-          var dhtSensor = new GrovePi.sensors.DHTDigital(3, GrovePi.sensors.DHTDigital.VERSION.DHT11, GrovePi.sensors.DHTDigital.CELSIUS)
-          **/
-          log.verbose(GROVEPI, "Looking for light sensor at analog port #0");
-          var lightSensor = new GrovePi.sensors.LightAnalog(0);
-/**
-          // DHT Sensor
-          log.info(GROVEPI, 'DHT Digital Sensor (start watch)');
-          var dhtData = { temperature: -1, humidity: -1 };
-          dhtSensor.on('change', function(res) {
-            if ( res.length == 3) {
-              dhtData = { temperature: res[0], humidity: res[1] };
+          log.verbose(GROVEPI, "Looking for Infrared Distance Interrupt sensor at digital port #3");
+          var infraredSensor = new GrovePi.sensors.base.Digital(3);
+          log.verbose(GROVEPI, 'Infrared Distance Interrupt Sensor (start watch)')
+          infraredSensor.on('change', function(res) {
+            if (res=="1") {
+              console.log("nothing");
             } else {
-              log.warn(GROVEPI, "DHT Digital Sensor: Invalid value read: " + res);
+              console.log("SOMETHING!!");
             }
           });
-          dhtSensor.watch(500) // milliseconds
-          timer = setInterval(() => {
-            if ( !dhtData) {
-              return;
-            }
-            log.verbose(GROVEPI, 'DHT onChange value = ' + JSON.stringify(dhtData));
-            var vd = grovepi.getIotVd(DHTSENSOR);
-            if (vd) {
-              vd.update(dhtData);
-            } else {
-              log.error(IOTCS, "URN not registered: " + DHTSENSOR);
-            }
-          }, 1000);
-**/
-          // Light Sensor
-          log.verbose(GROVEPI, 'Light Analog Sensor (start watch)')
-          var lightData = { intensity: -1 };
-          lightSensor.on('change', function(res) {
-            if (typeof res === 'number') {
-              lightData = { intensity: res };
-            } else {
-              log.warn(GROVEPI, "Light Sensor: Invalid value read: " + res);
-            }
-          });
-          lightSensor.watch();
-          timer = setInterval(() => {
-            if ( !lightData) {
-              return;
-            }
-            log.verbose(GROVEPI, 'Light Sensor onChange value = ' + JSON.stringify(lightData));
-            var vd = grovepi.getIotVd(LIGHTSENSOR);
-            if (vd) {
-              vd.update(lightData);
-            } else {
-              log.error(IOTCS, "URN not registered: " + LIGHTSENSOR);
-            }
-          }, 1000);
+          infraredSensor.watch();
         } else {
           log.error(GROVEPI, 'TEST CANNOT START')
         }
