@@ -266,10 +266,14 @@ async.series( {
           var infraredSensor = new GrovePi.sensors.base.Digital(3);
           log.verbose(GROVEPI, 'Infrared Distance Interrupt Sensor (start watch)')
           infraredSensor.on('change', function(res) {
-            if (res=="1") {
-              console.log("nothing");
+            var sensorData = { id: 1 };
+            sensorData.presence = (res != "1");
+            var vd = grovepi.getIotVd(INFRAREDDISTANCEINTERRUPTSENSOR);
+            if (vd) {
+              log.verbose(GROVEPI, 'Infrared Distance Interrupt onChange value = ' + JSON.stringify(sensorData));
+              vd.update(sensorData);
             } else {
-              console.log("SOMETHING!!");
+              log.error(IOTCS, "URN not registered: " + INFRAREDDISTANCEINTERRUPTSENSOR);
             }
           });
           infraredSensor.watch();
