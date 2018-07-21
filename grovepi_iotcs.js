@@ -3,7 +3,6 @@
 // Module imports
 const async = require('async')
   , GrovePi = require('node-grovepi').GrovePi
-  , dcl = require('./device-library.node')
   , Device = require('./device')
   , sensors = require('./sensors.json')
   , restify = require('restify')
@@ -11,6 +10,9 @@ const async = require('async')
   , commandLineArgs = require('command-line-args')
   , getUsage = require('command-line-usage')
   , log = require('npmlog-ts')
+;
+
+var dcl = require('./device-library.node')
 ;
 
 // Initialize input arguments
