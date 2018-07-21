@@ -1,7 +1,7 @@
 [
-  { id: 1, port: 2 },
-  { id: 2, port: 3 },
-  { id: 3, port: 4 },
-  { id: 4, port: 7 },
-  { id: 5, port: 8 }
+  { "id": 1, "port": 2 },
+  { "id": 2, "port": 3 },
+  { "id": 3, "port": 4 },
+  { "id": 4, "port": 7 },
+  { "id": 5, "port": 8 }
 ]
