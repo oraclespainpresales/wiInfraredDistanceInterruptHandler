@@ -1,10 +1,11 @@
 'use strict';
 
 // Module imports
-var async = require('async')
+const async = require('async')
   , GrovePi = require('node-grovepi').GrovePi
   , dcl = require('./device-library.node')
   , Device = require('./device')
+  , sensors = require('/sensors.json')
   , restify = require('restify')
   , fs = require('fs')
   , commandLineArgs = require('command-line-args')
