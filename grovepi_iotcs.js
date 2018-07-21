@@ -2,14 +2,15 @@
 
 // Module imports
 const async = require('async')
-  , GrovePi = require('node-grovepi').GrovePi
-  , Device = require('./device')
-  , sensors = require('./sensors.json')
-  , restify = require('restify')
-  , fs = require('fs')
-  , commandLineArgs = require('command-line-args')
-  , getUsage = require('command-line-usage')
-  , log = require('npmlog-ts')
+    , GrovePi = require('node-grovepi').GrovePi
+    , Device = require('./device')
+    , SENSORS = require('./sensors.json')
+    , restify = require('restify')
+    , fs = require('fs')
+    , commandLineArgs = require('command-line-args')
+    , getUsage = require('command-line-usage')
+    , log = require('npmlog-ts')
+    , _ = require('lodash')
 ;
 
 var dcl = require('./device-library.node')
@@ -100,6 +101,7 @@ var urn = [
      INFRAREDDISTANCEINTERRUPTSENSOR
 ];
 var grovepi = new Device(GROVEPIDEV);
+var sensors = [];
 const storeFile = options.device;
 var devices = [ grovepi ];
 
@@ -130,7 +132,6 @@ var timer    = undefined;
 const PROCESS = 'PROCESS';
 const IOTCS   = 'IOTCS';
 const GROVEPI = 'GROVEPI';
-const TRANSPORTID = 12222;
 log.timestamp = true;
 
 // device class helper
@@ -266,21 +267,25 @@ async.series( {
       onInit: function(res) {
         if (res) {
           log.verbose(GROVEPI, 'GrovePi Version :: ' + board.version());
-          log.verbose(GROVEPI, "Looking for Infrared Distance Interrupt sensor at digital port #3");
-          var infraredSensor = new GrovePi.sensors.base.Digital(3);
-          log.verbose(GROVEPI, 'Infrared Distance Interrupt Sensor (start watch)')
-          infraredSensor.on('change', function(res) {
-            var sensorData = { id: TRANSPORTID };
-            sensorData.presence = (res != "1");
-            var vd = grovepi.getIotVd(INFRAREDDISTANCEINTERRUPTSENSOR);
-            if (vd) {
-              log.verbose(GROVEPI, 'Infrared Distance Interrupt onChange value = ' + JSON.stringify(sensorData));
-              vd.update(sensorData);
-            } else {
-              log.error(IOTCS, "URN not registered: " + INFRAREDDISTANCEINTERRUPTSENSOR);
-            }
+          log.verbose(GROVEPI, 'Initializing %d sensors', SENSORS.length);
+          _.forEach(SENSORS, (s) => {
+            log.verbose(GROVEPI, "Looking for Infrared Distance Interrupt sensor with id '%d' at digital port #%d", s.id, s.port);
+            var infraredSensor = new GrovePi.sensors.base.Digital(s.port);
+            sensors.push({ id: s.id, port: s.port, sensors: infraredSensor });
+            log.verbose(GROVEPI, 'Start watch Infrared Distance Interrupt Sensor %d', s.id);
+            infraredSensor.on('change', function(res) {
+              var sensorData = { id: s.id };
+              sensorData.presence = (res != "1");
+              var vd = grovepi.getIotVd(INFRAREDDISTANCEINTERRUPTSENSOR);
+              if (vd) {
+                log.verbose(GROVEPI, 'Infrared Distance Interrupt onChange value = ' + JSON.stringify(sensorData));
+                vd.update(sensorData);
+              } else {
+                log.error(IOTCS, "URN not registered: " + INFRAREDDISTANCEINTERRUPTSENSOR);
+              }
+            });
+            infraredSensor.watch();
           });
-          infraredSensor.watch();
         } else {
           log.error(GROVEPI, 'TEST CANNOT START')
         }
