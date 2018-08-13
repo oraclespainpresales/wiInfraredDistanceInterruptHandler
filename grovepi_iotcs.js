@@ -319,7 +319,7 @@ async.series( {
       res.status(204).send();
       res.end();
       console.log("request!!");
-      console.log(res.body);
+      console.log(req.body);
     });
     server.listen(PORT, function() {
       log.info(REST, "REST Server initialized successfully");
