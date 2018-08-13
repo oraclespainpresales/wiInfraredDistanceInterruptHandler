@@ -108,6 +108,18 @@ var sensors = [];
 const storeFile = options.device;
 var devices = [ grovepi ];
 
+// Initializing REST server BEGIN
+const PORT = process.env.GPSPORT || 8888
+    , restURI = '/gps'
+    , resetURI = '/resetroute'
+;
+
+var app    = express()
+  , router = express.Router()
+  , server = http.createServer(app)
+;
+// Initializing REST server END
+
 // Initializing REST client BEGIN
 var client = restify.createJsonClient({
   url: options.iotcs,
@@ -135,6 +147,7 @@ var timer    = undefined;
 const PROCESS = 'PROCESS';
 const IOTCS   = 'IOTCS';
 const GROVEPI = 'GROVEPI';
+const REST    = 'REST';
 log.timestamp = true;
 
 // device class helper
@@ -296,6 +309,23 @@ async.series( {
     })
     board.init()
     callbackMainSeries(null, true);
+  },
+  rest: function(callbackMainSeries) {
+    log.info(REST, "Initializing REST Server");
+    app.use(bodyParser.urlencoded({ extended: true }));
+    app.use(bodyParser.json());
+    app.use(restURI, router);
+    router.post(resetURI, function(req, res) {
+      res.status(204).send();
+      res.end();
+      console.log("request!!");
+      console.log(res.body);
+    });
+    server.listen(PORT, function() {
+      log.info(REST, "REST Server initialized successfully");
+      callbackMainSeries(null, true);
+    });
+
   }
 }, function(err, results) {
   if (err) {
