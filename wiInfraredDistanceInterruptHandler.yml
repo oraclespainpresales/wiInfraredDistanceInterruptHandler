@@ -1,8 +1,0 @@
-apps:
-  - script : grovepi_iotcs.js
-    name   : 'wiInfraredDistanceInterruptHandler'
-    cwd    : '/home/pi/node/wiInfraredDistanceInterruptHandler'
-    watch  : false
-    args   : '-d MADRID.conf -s https://129.150.117.187 -v'
-    env    :
-      NODE_PATH: /usr/lib/node_modules

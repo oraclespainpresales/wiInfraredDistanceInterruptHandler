@@ -18,9 +18,11 @@
   "homepage": "https://github.com/oraclespainpresales/hackathonwrapper#readme",
   "dependencies": {
     "async": "^2.3.0",
+    "body-parser": "^1.18.3",
     "command-line-args": "^4.0.3",
     "command-line-usage": "^4.0.0",
-    "lodash": "^4.17.4",
+    "express": "^4.16.3",
+    "lodash": "^4.17.10",
     "node-grovepi": "^2.1.1",
     "npmlog-ts": "0.0.1",
     "restify": "^4.3.0"
