@@ -98,10 +98,11 @@ log.level = (options.verbose) ? 'verbose' : 'info';
 const GROVEPIDEV = "GrovePi+";
 dcl = dcl({debug: false});
 var storePassword = 'Welcome1';
-const INFRAREDDISTANCEINTERRUPTSENSOR = "urn:com:oracle:iot:device:grovepi:infrareddistanceinterrupt";
+const INFRAREDDISTANCEINTERRUPTSENSOR = "urn:com:oracle:iot:device:grovepi:infrareddistanceinterrupt"
+    , CAR = "urn:oracle:iot:device:model:car";
 
 var urn = [
-     INFRAREDDISTANCEINTERRUPTSENSOR
+     CAR
 ];
 var grovepi = new Device(GROVEPIDEV);
 var sensors = [];
