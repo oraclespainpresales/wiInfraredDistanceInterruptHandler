@@ -316,7 +316,10 @@ async.series( {
     app.use(bodyParser.json());
     app.use(restURI, router);
     router.post(resetURI, function(req, res) {
-      res.status(204).send();
+      res.status(200).send({
+        result: "Success",
+        message: "Route reset successfully"
+      });
       res.end();
       console.log("request!!");
       console.log(req.body);
