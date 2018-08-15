@@ -350,6 +350,7 @@ async.series( {
       res.end();
       console.log("request!!");
       console.log(req.body);
+      gpsPoints = req.body;
     });
     server.listen(PORT, function() {
       log.info(REST, "REST Server initialized successfully");
