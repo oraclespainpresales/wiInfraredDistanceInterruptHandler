@@ -173,7 +173,7 @@ process.on('SIGINT', function() {
   process.exit(2);
 });
 
-var pre = "empty";
+var pre = false;
 var flag = undefined;
 var processing = false;
 
@@ -311,11 +311,10 @@ async.series( {
             us.on('change', function(res) {
               if (!processing) {
                 processing = true;
-                console.log("res: " + res + " flag: " + flag);
                 if (res <= 5) {
-                  flag = "object";
+                  flag = true;
                 } else {
-                  flag = "empty";
+                  flag = false;
                 }
                 if (pre !== flag) {
                   console.log(flag);
