@@ -301,7 +301,7 @@ async.series( {
                 log.error(IOTCS, "URN not registered: " + INFRAREDDISTANCEINTERRUPTSENSOR);
               }
             });
-            infraredSensor.watch();
+//            infraredSensor.watch();
 
             var us = new GrovePi.sensors.UltrasonicDigital(6);
             us.on('change', function(res) {
