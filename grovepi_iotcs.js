@@ -95,19 +95,21 @@ if (!fs.existsSync(options.device)) {
 log.level = (options.verbose) ? 'verbose' : 'info';
 
 // IoTCS stuff
-const GROVEPIDEV = "GrovePi+";
 dcl = dcl({debug: false});
 var storePassword = 'Welcome1';
-const INFRAREDDISTANCEINTERRUPTSENSOR = "urn:com:oracle:iot:device:grovepi:infrareddistanceinterrupt"
-    , CAR = "urn:oracle:iot:device:model:car";
+const GROVEPIDEV = "GrovePi+"
+    , INFRAREDDISTANCEINTERRUPTSENSORDM = "urn:com:oracle:iot:device:grovepi:infrareddistanceinterrupt"
+    , CARDM = "urn:oracle:iot:device:model:car"
+    , storeFile = options.device
+;
 
-var urn = [
-     CAR
-];
-var grovepi = new Device(GROVEPIDEV);
-var sensors = [];
-const storeFile = options.device;
-var devices = [ grovepi ];
+var urn = [ CARDM ]
+  , grovepi = new Device(GROVEPIDEV)
+  , sensors = []
+  , devices = [ grovepi ]
+  , gpsPoints = _.noop()
+  , gpsCounter = 0
+;
 
 // Initializing REST server BEGIN
 const PORT = process.env.GPSPORT || 8888
@@ -290,25 +292,12 @@ async.series( {
           log.verbose(GROVEPI, 'GrovePi Version :: ' + board.version());
           log.verbose(GROVEPI, 'Initializing %d sensors', SENSORS.length);
           _.forEach(SENSORS, (s) => {
-            log.verbose(GROVEPI, "Looking for Infrared Distance Interrupt sensor with id '%d' at digital port #%d", s.id, s.port);
-            var infraredSensor = new GrovePi.sensors.base.Digital(s.port);
-            sensors.push({ id: s.id, port: s.port, sensors: infraredSensor });
-            log.verbose(GROVEPI, 'Start watch Infrared Distance Interrupt Sensor %d', s.id);
-            infraredSensor.on('change', function(res) {
-              var sensorData = { id: s.id };
-              sensorData.presence = (res != "1");
-              var vd = grovepi.getIotVd(INFRAREDDISTANCEINTERRUPTSENSOR);
-              if (vd) {
-                log.verbose(GROVEPI, 'Infrared Distance Interrupt onChange value = ' + JSON.stringify(sensorData));
-                vd.update(sensorData);
-              } else {
-                log.error(IOTCS, "URN not registered: " + INFRAREDDISTANCEINTERRUPTSENSOR);
-              }
-            });
-//            infraredSensor.watch();
-
-            var us = new GrovePi.sensors.UltrasonicDigital(6);
-            us.on('change', function(res) {
+            log.verbose(GROVEPI, "Looking for Ultrasonic sensor with id '%d' at digital port #%d", s.id, s.port);
+//            var infraredSensor = new GrovePi.sensors.base.Digital(s.port);
+            var ultrasonicSensor = new GrovePi.sensors.UltrasonicDigital(s.port);
+            sensors.push({ id: s.id, port: s.port, sensors: ultrasonicSensor });
+            log.verbose(GROVEPI, 'Start watch Ultrasonic Sensor %d', s.id);
+            ultrasonicSensor.on('change', function(res) {
               if (!processing) {
                 processing = true;
                 if (res <= 5) {
@@ -317,14 +306,28 @@ async.series( {
                   flag = false;
                 }
                 if (pre !== flag) {
-                  console.log(flag);
                   pre = flag;
+                  if (flag == true) {
+                    if ( !_.isUndefined(gpsPoints)) {
+                      if (gpsCounter > (gpsPoints.length - 1)) {
+                        gpsCounter = 0;
+                      }
+                      var coordinates = gpsPoints[gpsCounter++];
+                      var sensorData = { ora_latitude: coordinates.lat, ora_longitude: coordinates.lon };
+                      var vd = grovepi.getIotVd(CARDM);
+                      if (vd) {
+                        log.verbose(GROVEPI, 'Ultrasonic onChange value (%d) = %s', gosCounter, JSON.stringify(sensorData));
+                        vd.update(sensorData);
+                      } else {
+                        log.error(IOTCS, "URN not registered: " + INFRAREDDISTANCEINTERRUPTSENSOR);
+                      }
+                    }
+                  }
                 }
                 processing = false;
               }
             });
-            us.watch();
-
+            ultrasonicSensor.watch();
           });
         } else {
           log.error(GROVEPI, 'TEST CANNOT START')
