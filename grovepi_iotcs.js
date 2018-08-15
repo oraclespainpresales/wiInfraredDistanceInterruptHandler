@@ -312,7 +312,7 @@ async.series( {
                       if (gpsCounter > (gpsPoints.length - 1)) {
                         gpsCounter = 0;
                       }
-                      var coordinates = gpsPoints[gpsCounter++];
+                      var coordinates = gpsPoints[gpsCounter];
                       var sensorData = { ora_latitude: coordinates.lat, ora_longitude: coordinates.lon };
                       var vd = grovepi.getIotVd(CARDM);
                       if (vd) {
@@ -321,6 +321,9 @@ async.series( {
                       } else {
                         log.error(IOTCS, "URN not registered: " + INFRAREDDISTANCEINTERRUPTSENSOR);
                       }
+                      gpsCounter++;
+                    } else {
+                      log.error(IOTCS, "Cannot send GPS position as route hasn't been set yet");
                     }
                   }
                 }
@@ -345,12 +348,12 @@ async.series( {
     router.post(resetURI, function(req, res) {
       res.status(200).send({
         result: "Success",
-        message: "Route reset successfully"
+        message: "Route reset successfully with " + req.body.length + " GPS points"
       });
       res.end();
-      console.log("request!!");
-      console.log(req.body);
       gpsPoints = req.body;
+      gpsCounter = 0;
+      log.verbose(REST, "New route received successfully with %d points", req.body.length);
     });
     server.listen(PORT, function() {
       log.info(REST, "REST Server initialized successfully");
