@@ -316,7 +316,7 @@ async.series( {
                       var sensorData = { ora_latitude: coordinates.lat, ora_longitude: coordinates.lon };
                       var vd = grovepi.getIotVd(CARDM);
                       if (vd) {
-                        log.verbose(GROVEPI, 'Ultrasonic onChange value (%d) = %s', gosCounter, JSON.stringify(sensorData));
+                        log.verbose(GROVEPI, 'Ultrasonic onChange value (%d) = %s', gpsCounter, JSON.stringify(sensorData));
                         vd.update(sensorData);
                       } else {
                         log.error(IOTCS, "URN not registered: " + INFRAREDDISTANCEINTERRUPTSENSOR);
