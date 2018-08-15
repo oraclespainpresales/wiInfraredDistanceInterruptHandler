@@ -304,7 +304,8 @@ async.series( {
 //            infraredSensor.watch();
 
             var us = new GrovePi.sensors.UltrasonicDigital(6);
-            var before = now = false;
+            var before = false;
+            var now = false;
             us.on('change', function(res) {
               if (res <= 5) {
                 if ( before == false) {
