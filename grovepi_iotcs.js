@@ -307,12 +307,12 @@ async.series( {
             var presence;
             us.on('change', function(res) {
               if (res <= 5) {
-                if (!presence) {
+                if (presence == false) {
                   presence = true;
                   console.log("true");
                 }
               } else {
-                if (presence) {
+                if (presence == true) {
                   presence = false;
                   console.log("false");
                 }
