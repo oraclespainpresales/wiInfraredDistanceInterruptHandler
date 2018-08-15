@@ -305,7 +305,9 @@ async.series( {
 
             var us = new GrovePi.sensors.UltrasonicDigital(6);
             us.on('change', function(res) {
-              console.log(res);
+              if (res < 10) {
+                console.log(res);
+              }
             });
             us.watch();
 
