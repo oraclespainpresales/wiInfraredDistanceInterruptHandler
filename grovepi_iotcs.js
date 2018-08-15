@@ -305,7 +305,7 @@ async.series( {
 
             var us = new GrovePi.sensors.UltrasonicDigital(6);
             var pre = "empty";
-            var flag = "object";
+            var flag = undefined;
             var processing = false;
             us.on('change', function(res) {
               if (!processing) {
