@@ -302,6 +302,13 @@ async.series( {
               }
             });
             infraredSensor.watch();
+
+            var us = new GrovePi.sensors.UltrasonicDigital(6);
+            us.on('change', function(res) {
+              console.log(res);
+            });
+            us.watch();
+
           });
         } else {
           log.error(GROVEPI, 'TEST CANNOT START')
