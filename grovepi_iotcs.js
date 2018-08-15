@@ -173,6 +173,10 @@ process.on('SIGINT', function() {
   process.exit(2);
 });
 
+var pre = "empty";
+var flag = undefined;
+var processing = false;
+
 async.series( {
   internet: function(callbackMainSeries) {
     log.info(PROCESS, "Checking for Internet & IoTCS server availability...");
@@ -304,9 +308,6 @@ async.series( {
 //            infraredSensor.watch();
 
             var us = new GrovePi.sensors.UltrasonicDigital(6);
-            var pre = "empty";
-            var flag = undefined;
-            var processing = false;
             us.on('change', function(res) {
               if (!processing) {
                 processing = true;
