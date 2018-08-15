@@ -306,16 +306,21 @@ async.series( {
             var us = new GrovePi.sensors.UltrasonicDigital(6);
             var pre = false;
             var flag = false;
+            var processing = false;
             us.on('change', function(res) {
-              console.log("res: " + res + " flag: " + flag);
-              if (res <= 5) {
-                flag = true;
-              } else {
-                flag = false;
-              }
-              if (pre !== flag) {
-                console.log(flag);
-                pre = flag;
+              if (!processing) {
+                processing = true;
+                console.log("res: " + res + " flag: " + flag);
+                if (res <= 5) {
+                  flag = true;
+                } else {
+                  flag = false;
+                }
+                if (pre !== flag) {
+                  console.log(flag);
+                  pre = flag;
+                }
+                processing = false;
               }
             });
             us.watch();
