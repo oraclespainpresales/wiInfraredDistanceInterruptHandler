@@ -417,8 +417,11 @@ async.series( {
       }
       // No matter which action, if BLINKing, cancel it
       if (LED.status === BLINK) {
+        console.log(LED);
+        console.log("clearing blink");
         clearInterval(LED.blink.interval);
         delete LED.blink;
+        console.log(LED);
       }
       if ( action === ON) {
           LED.device.turnOn();
