@@ -113,8 +113,14 @@ var urn = [ CARDM ]
 
 // Initializing REST server BEGIN
 const PORT = process.env.GPSPORT || 8888
-    , restURI = '/gps'
-    , resetURI = '/resetroute'
+    , restURI = '/'
+    , resetURI = '/gps/resetroute'
+    , ledsURI  = '/leds/:led/:action/:duration?'
+    , RED = 'RED'
+    , GREEN = 'GREEN'
+    , ON = 'ON'
+    , OFF = 'OFF'
+    , BLINK = 'BLINK'
 ;
 
 var app    = express()
@@ -142,11 +148,11 @@ grovepi.setStoreFile(storeFile, storePassword);
 grovepi.setUrn(urn);
 
 // GrovePi stuff
-var board    = undefined
-  , redLed   = { on: false, device: undefined }
-  , greenLed = { on: false, device: undefined }
-  , lastData = undefined
-  , timer    = undefined
+var board      = undefined
+  , boardReady = false
+  , LEDS       = []
+  , lastData   = undefined
+  , timer      = undefined
 ;
 
 // Misc
@@ -183,14 +189,14 @@ var flag = undefined;
 var processing = false;
 
 async.series( {
-  internet: function(callbackMainSeries) {
+  internet: (callbackMainSeries) => {
     log.info(PROCESS, "Checking for Internet & IoTCS server availability...");
     var URI = "/iot/api/v1/private/server";
     var retries = 0;
     async.retry({
       times: 99999999999,
       interval: 2000
-    }, function(cb, results) {
+    }, (cb, results) => {
       retries++;
       log.verbose(PROCESS, "Trying to reach server %s (attempt %d)", options.iotcs, retries);
       client.get(URI, function(err, req, res, obj) {
@@ -204,7 +210,7 @@ async.series( {
           cb(null, "OK");
         }
       });
-    }, function(err, result) {
+    }, (err, result) => {
       if (!result) {
         // Server not available. Abort whole process
         log.error(PROCESS, "Server not available after %d attempts. Aborting process!", retries);
@@ -214,18 +220,18 @@ async.series( {
       callbackMainSeries(null, true);
     });
   },
-  iot: function(callbackMainSeries) {
+  iot: (callbackMainSeries) => {
     log.info(IOTCS, "Initializing IoTCS devices");
     log.info(IOTCS, "Using IoTCS JavaScript Libraries v" + dcl.version);
-    async.eachSeries( devices, function(d, callbackEachSeries) {
+    async.eachSeries( devices, (d, callbackEachSeries) => {
       async.series( [
-        function(callbackSeries) {
+        (callbackSeries) => {
           // Initialize Device
           log.info(IOTCS, "Initializing IoT device '" + d.getName() + "'");
           d.setIotDcd(new dcl.device.DirectlyConnectedDevice(d.getIotStoreFile(), d.getIotStorePassword()));
           callbackSeries(null);
         },
-        function(callbackSeries) {
+        (callbackSeries) => {
           // Check if already activated. If not, activate it
           if (!d.getIotDcd().isActivated()) {
             log.verbose(IOTCS, "Activating IoT device '" + d.getName() + "'");
@@ -246,7 +252,7 @@ async.series( {
             callbackSeries(null);
           }
         },
-        function(callbackSeries) {
+        (callbackSeries) => {
           // When here, the device should be activated. Get device models, one per URN registered
           async.eachSeries(d.getUrn(), function(urn, callbackEachSeriesUrn) {
             getModel(d.getIotDcd(), urn, (function (error, model) {
@@ -259,7 +265,7 @@ async.series( {
               }
               callbackEachSeriesUrn(null);
             }).bind(this));
-          }, function(err) {
+          }, (err) => {
             if (err) {
               callbackSeries(err);
             } else {
@@ -267,10 +273,10 @@ async.series( {
             }
           });
         }
-      ], function(err, results) {
+      ], (err, results) => {
         callbackEachSeries(err);
       });
-    }, function(err) {
+    }, (err) => {
       if (err) {
         callbackMainSeries(err);
       } else {
@@ -279,7 +285,7 @@ async.series( {
       }
     });
   },
-  grovepi: function(callbackMainSeries) {
+  grovepi: (callbackMainSeries) => {
     log.info(GROVEPI, "Initializing GrovePi devices");
     if (board)
       callbackMainSeries(null, true);
@@ -290,8 +296,9 @@ async.series( {
         log.error(GROVEPI, 'TEST ERROR');
         log.error(GROVEPI, err);
       },
-      onInit: function(res) {
+      onInit: (res) => {
         if (res) {
+          boardReady = true;
           log.verbose(GROVEPI, 'GrovePi Version :: ' + board.version());
           log.verbose(GROVEPI, 'Initializing %d sensors', SENSORS.length);
           _.forEach(SENSORS, (s) => {
@@ -366,12 +373,12 @@ async.series( {
     board.init()
     callbackMainSeries(null, true);
   },
-  rest: function(callbackMainSeries) {
+  rest: (callbackMainSeries) => {
     log.info(REST, "Initializing REST Server");
     app.use(bodyParser.urlencoded({ extended: true }));
     app.use(bodyParser.json());
     app.use(restURI, router);
-    router.post(resetURI, function(req, res) {
+    router.post(resetURI, (req, res) => {
       res.status(200).send({
         result: "Success",
         message: "Route reset successfully with " + req.body.length + " GPS points"
@@ -381,13 +388,87 @@ async.series( {
       gpsCounter = 0;
       log.verbose(REST, "New route received successfully with %d points", req.body.length);
     });
-    server.listen(PORT, function() {
+    router.get(ledsURI), (req, res) => {
+      // /leds/:led/:action/:duration?
+      var led = req.params.led.toUpperCase();
+      var action = req.params.action.toUpperCase();
+      var duration = req.params.duration;
+      // Let's check the inputs
+      LED[
+        { color: RED, status: ON, duration: 123, device: device }
+      ]
+      if (!LEDS || LEDS.length == 0) {
+        res.status(400).send({
+          result: "Failure",
+          message: "Leds not yet initialized"
+        });
+        res.end();
+        return;
+      }
+      var LED = _.find(LEDS, { color: led });
+      if (!LED) {
+        res.status(400).send({
+          result: "Failure",
+          message: "Led with color " + req.params.led + " not found"
+        });
+        res.end();
+        return;
+      }
+      if (
+          ( action !== ON && action !== OFF && action !== BLINK ) ||
+          ( action === BLINK && ( !duration || parseInt(duration) == NaN)
+        ) {
+          res.status(400).send({
+            result: "Failure",
+            message: "Invalid parameters"
+          });
+          res.end();
+          return;
+        }
+      if (!boardReady) {
+        res.status(400).send({
+          result: "Failure",
+          message: "GrovePi board is not ready"
+        });
+        res.end();
+        return;
+      }
+      // No matter which action, if BLINKing, cancel it
+      if (LED.status === BLINK) {
+        clearInterval(LED.blink.interval);
+        delete LED.blink;
+      }
+      if ( action === ON) {
+          LED.device.turnOn();
+          LED.status = ON;
+      } else if (action === OFF) {
+        LED.device.turnOff();
+        LED.status = OFF;
+      } else if (action === BLINK) {
+        LED.blink.status = OFF;
+        LED.blink.interval = setInterval(() => {
+          if (LED.blink.status === OFF) {
+              LED.device.turnOn();
+              LED.blink.status = ON;
+          } else {
+            LED.device.turnOff();
+            LED.blink.status = OFF;
+          }
+        }, duration);
+      }
+
+      res.status(200).send({
+        result: "Success",
+        message: "Led changed as required"
+      });
+      res.end();
+    });
+    server.listen(PORT, () => {
       log.info(REST, "REST Server initialized successfully");
       callbackMainSeries(null, true);
     });
-
   }
-}, function(err, results) {
+}, (err, results) => {
   if (err) {
   } else {
     log.info(PROCESS, 'Initialization completed');
