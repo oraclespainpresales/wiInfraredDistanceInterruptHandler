@@ -143,7 +143,7 @@ grovepi.setUrn(urn);
 
 // GrovePi stuff
 var board    = undefined
-  , redLed   = undefined
+  , redLed   = { on: false, device: undefined };
   , lastData = undefined
   , timer    = undefined
 ;
@@ -324,7 +324,15 @@ async.series( {
                       }
                       gpsCounter++;
                     } else {
-                      redLed.turnOff();
+                      setInterval(() => {
+                        if (redled.status) {
+                          redLed.device.turnOff();
+                          redLed.status = false;
+                        } else {
+                          redLed.device.turnOn();
+                          redLed.status = true;
+                        }
+                      }, 500);
                       log.error(IOTCS, "Cannot send GPS position as route hasn't been set yet");
                     }
                   }
@@ -334,8 +342,9 @@ async.series( {
             });
             ultrasonicSensor.watch();
           });
-          redLed = new GrovePi.sensors.DigitalOutput(5);
-          redLed.turnOn();
+          redLed.device = new GrovePi.sensors.DigitalOutput(5);
+          redLed.device.turnOn();
+          redLed.status = true;
         } else {
           log.error(GROVEPI, 'TEST CANNOT START')
         }
