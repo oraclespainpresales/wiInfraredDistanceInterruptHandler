@@ -332,24 +332,6 @@ async.series( {
                       }
                       gpsCounter++;
                     } else {
-                      setInterval(() => {
-                        if (greenLed.status) {
-                          greenLed.device.turnOff();
-                          greenLed.status = false;
-                        } else {
-                          greenLed.device.turnOn();
-                          greenLed.status = true;
-                        }
-                      }, 300);
-                      setInterval(() => {
-                        if (redLed.status) {
-                          redLed.device.turnOff();
-                          redLed.status = false;
-                        } else {
-                          redLed.device.turnOn();
-                          redLed.status = true;
-                        }
-                      }, 500);
                       log.error(IOTCS, "Cannot send GPS position as route hasn't been set yet");
                     }
                   }
