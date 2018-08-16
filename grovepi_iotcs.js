@@ -359,12 +359,6 @@ async.series( {
             });
             ultrasonicSensor.watch();
           });
-          redLed.device = new GrovePi.sensors.DigitalOutput(5);
-          redLed.device.turnOn();
-          redLed.status = true;
-          greenLed.device = new GrovePi.sensors.DigitalOutput(6);
-          greenLed.device.turnOn();
-          greenLed.status = true;
         } else {
           log.error(GROVEPI, 'TEST CANNOT START')
         }
