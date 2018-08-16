@@ -8,9 +8,8 @@ const async = require('async')
 ;
 
 // GrovePi stuff
-var board    = undefined;
-var lastData = undefined;
-var timer    = undefined;
+var board = undefined
+  , led   = undefined;
 
 // Misc
 const PROCESS = 'PROCESS';
@@ -44,9 +43,14 @@ board = new GrovePi.board({
   onInit: function(res) {
     if (res) {
       log.verbose(GROVEPI, 'GrovePi Version :: ' + board.version());
-      var led = new GrovePi.sensors.DigitalOutput(5);
+      led = new GrovePi.sensors.DigitalOutput(5);
       led.turnOn();
     }
   }
 });
+
+setTimeout(function() {
+  led.turnOff();
+}, 2000);
+
 board.init()
