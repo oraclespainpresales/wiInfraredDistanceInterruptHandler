@@ -388,7 +388,7 @@ async.series( {
       gpsCounter = 0;
       log.verbose(REST, "New route received successfully with %d points", req.body.length);
     });
-    router.get(ledsURI), (req, res) => {
+    router.get(ledsURI, (req, res) => {
       // /leds/:led/:action/:duration?
       var led = req.params.led.toUpperCase();
       var action = req.params.action.toUpperCase();
@@ -416,7 +416,7 @@ async.series( {
       }
       if (
           ( action !== ON && action !== OFF && action !== BLINK ) ||
-          ( action === BLINK && ( !duration || parseInt(duration) == NaN)
+          ( action === BLINK && ( !duration || parseInt(duration) == NaN))
         ) {
           res.status(400).send({
             result: "Failure",
@@ -456,7 +456,6 @@ async.series( {
           }
         }, duration);
       }
-
       res.status(200).send({
         result: "Success",
         message: "Led changed as required"
