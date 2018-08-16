@@ -375,7 +375,6 @@ async.series( {
     });
     router.get(ledsURI, (req, res) => {
       // /leds/:led/:action/:duration?
-      console.log(LEDS);
       var led = req.params.led.toUpperCase();
       var action = req.params.action.toUpperCase();
       var duration = req.params.duration;
@@ -418,11 +417,8 @@ async.series( {
       }
       // No matter which action, if BLINKing, cancel it
       if (LED.status === BLINK) {
-        console.log(LED);
-        console.log("clearing blink");
         clearInterval(LED.blink.interval);
         delete LED.blink;
-        console.log(LED);
       }
       if ( action === ON) {
           LED.device.turnOn();
@@ -431,6 +427,7 @@ async.series( {
         LED.device.turnOff();
         LED.status = OFF;
       } else if (action === BLINK) {
+        LED.status = BLINK;
         LED.blink = {};
         LED.blink.status = OFF;
         LED.blink.interval = setInterval(() => {
