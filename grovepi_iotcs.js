@@ -333,7 +333,7 @@ async.series( {
                           greenLed.device.turnOn();
                           greenLed.status = true;
                         }
-                      }, 100);
+                      }, 300);
                       setInterval(() => {
                         if (redLed.status) {
                           redLed.device.turnOff();
