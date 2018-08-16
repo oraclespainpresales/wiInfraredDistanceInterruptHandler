@@ -142,9 +142,11 @@ grovepi.setStoreFile(storeFile, storePassword);
 grovepi.setUrn(urn);
 
 // GrovePi stuff
-var board    = undefined;
-var lastData = undefined;
-var timer    = undefined;
+var board    = undefined
+  , redLed   = undefined
+  , lastData = undefined
+  , timer    = undefined
+;
 
 // Misc
 const PROCESS = 'PROCESS';
@@ -293,7 +295,6 @@ async.series( {
           log.verbose(GROVEPI, 'Initializing %d sensors', SENSORS.length);
           _.forEach(SENSORS, (s) => {
             log.verbose(GROVEPI, "Looking for Ultrasonic sensor with id '%d' at digital port #%d", s.id, s.port);
-//            var infraredSensor = new GrovePi.sensors.base.Digital(s.port);
             var ultrasonicSensor = new GrovePi.sensors.UltrasonicDigital(s.port);
             sensors.push({ id: s.id, port: s.port, sensors: ultrasonicSensor });
             log.verbose(GROVEPI, 'Start watch Ultrasonic Sensor %d', s.id);
@@ -323,6 +324,7 @@ async.series( {
                       }
                       gpsCounter++;
                     } else {
+                      led.turnOff();
                       log.error(IOTCS, "Cannot send GPS position as route hasn't been set yet");
                     }
                   }
@@ -332,6 +334,8 @@ async.series( {
             });
             ultrasonicSensor.watch();
           });
+          led = new GrovePi.sensors.DigitalOutput(5);
+          led.turnOn();
         } else {
           log.error(GROVEPI, 'TEST CANNOT START')
         }

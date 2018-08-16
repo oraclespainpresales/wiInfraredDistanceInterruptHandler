@@ -35,7 +35,7 @@ if (board)
   callbackMainSeries(null, true);
 log.verbose(GROVEPI, 'Starting Board setup');
 board = new GrovePi.board({
-  debug: true,
+//  debug: true,
   onError: function(err) {
     log.error(GROVEPI, 'TEST ERROR');
     log.error(GROVEPI, err);
