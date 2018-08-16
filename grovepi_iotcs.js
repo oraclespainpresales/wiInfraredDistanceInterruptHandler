@@ -375,6 +375,7 @@ async.series( {
     });
     router.get(ledsURI, (req, res) => {
       // /leds/:led/:action/:duration?
+      console.log(LEDS);
       var led = req.params.led.toUpperCase();
       var action = req.params.action.toUpperCase();
       var duration = req.params.duration;
