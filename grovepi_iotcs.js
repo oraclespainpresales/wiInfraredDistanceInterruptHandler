@@ -144,6 +144,7 @@ grovepi.setUrn(urn);
 // GrovePi stuff
 var board    = undefined
   , redLed   = { on: false, device: undefined }
+  , greenLed = { on: false, device: undefined }
   , lastData = undefined
   , timer    = undefined
 ;
@@ -325,6 +326,15 @@ async.series( {
                       gpsCounter++;
                     } else {
                       setInterval(() => {
+                        if (greenLed.status) {
+                          greenLed.device.turnOff();
+                          greenLed.status = false;
+                        } else {
+                          greenLed.device.turnOn();
+                          greenLed.status = true;
+                        }
+                      }, 100);
+                      setInterval(() => {
                         if (redLed.status) {
                           redLed.device.turnOff();
                           redLed.status = false;
@@ -345,6 +355,9 @@ async.series( {
           redLed.device = new GrovePi.sensors.DigitalOutput(5);
           redLed.device.turnOn();
           redLed.status = true;
+          greenLed.device = new GrovePi.sensors.DigitalOutput(6);
+          greenLed.device.turnOn();
+          greenLed.status = true;
         } else {
           log.error(GROVEPI, 'TEST CANNOT START')
         }
