@@ -427,6 +427,7 @@ async.series( {
         LED.device.turnOff();
         LED.status = OFF;
       } else if (action === BLINK) {
+        LED.blink = {};
         LED.blink.status = OFF;
         LED.blink.interval = setInterval(() => {
           if (LED.blink.status === OFF) {
