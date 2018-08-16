@@ -348,7 +348,7 @@ async.series( {
           _.forEach(LEDSCFG, (l) => {
             log.verbose(GROVEPI, "Setting LED with color '%s' at digital port #%d", l.color, l.port);
             var led = new GrovePi.sensors.DigitalOutput(l.port);
-            LEDS.push({ color: s.id, port: s.port, device: led });
+            LEDS.push({ color: l.color, port: l.port, device: led });
           });
         } else {
           log.error(GROVEPI, 'TEST CANNOT START')
