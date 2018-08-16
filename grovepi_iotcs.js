@@ -324,7 +324,7 @@ async.series( {
                       }
                       gpsCounter++;
                     } else {
-                      led.turnOff();
+                      redLed.turnOff();
                       log.error(IOTCS, "Cannot send GPS position as route hasn't been set yet");
                     }
                   }
@@ -334,8 +334,8 @@ async.series( {
             });
             ultrasonicSensor.watch();
           });
-          led = new GrovePi.sensors.DigitalOutput(5);
-          led.turnOn();
+          redLed = new GrovePi.sensors.DigitalOutput(5);
+          redLed.turnOn();
         } else {
           log.error(GROVEPI, 'TEST CANNOT START')
         }
