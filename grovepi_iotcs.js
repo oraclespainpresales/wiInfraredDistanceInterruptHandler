@@ -325,7 +325,7 @@ async.series( {
                       gpsCounter++;
                     } else {
                       setInterval(() => {
-                        if (redled.status) {
+                        if (redLed.status) {
                           redLed.device.turnOff();
                           redLed.status = false;
                         } else {
