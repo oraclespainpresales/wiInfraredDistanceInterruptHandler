@@ -4,7 +4,8 @@
 const async = require('async')
     , GrovePi = require('node-grovepi').GrovePi
     , Device = require('./device')
-    , SENSORS = require('./sensors.json')
+    , SENSORSCFG = require('./sensors.json')
+    , LEDSCFG = require('./leds.json')
     , express = require('express')
     , http = require('http')
     , bodyParser = require('body-parser')
@@ -300,8 +301,9 @@ async.series( {
         if (res) {
           boardReady = true;
           log.verbose(GROVEPI, 'GrovePi Version :: ' + board.version());
-          log.verbose(GROVEPI, 'Initializing %d sensors', SENSORS.length);
-          _.forEach(SENSORS, (s) => {
+          // Sensors
+          log.verbose(GROVEPI, 'Initializing %d sensors', SENSORSCFG.length);
+          _.forEach(SENSORSCFG, (s) => {
             log.verbose(GROVEPI, "Looking for Ultrasonic sensor with id '%d' at digital port #%d", s.id, s.port);
             var ultrasonicSensor = new GrovePi.sensors.UltrasonicDigital(s.port);
             sensors.push({ id: s.id, port: s.port, sensors: ultrasonicSensor });
@@ -340,6 +342,13 @@ async.series( {
               }
             });
             ultrasonicSensor.watch();
+          });
+          // LEDS
+          log.verbose(GROVEPI, 'Initializing %d leds', LEDSCFG.length);
+          _.forEach(LEDSCFG, (l) => {
+            log.verbose(GROVEPI, "Setting LED with color '%s' at digital port #%d", l.color, l.port);
+            var led = new GrovePi.sensors.DigitalOutput(l.port);
+            LEDS.push({ color: s.id, port: s.port, device: led });
           });
         } else {
           log.error(GROVEPI, 'TEST CANNOT START')
