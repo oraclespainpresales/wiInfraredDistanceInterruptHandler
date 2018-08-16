@@ -61,6 +61,7 @@ board = new GrovePi.board({
       log.verbose(GROVEPI, 'GrovePi Version :: ' + board.version());
       var led = new GrovePi.sensors.DigitalOutput(5);
       led.turnOn();
+    }
   }
-})
+});
 board.init()
