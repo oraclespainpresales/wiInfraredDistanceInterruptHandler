@@ -7,21 +7,6 @@ const async = require('async')
     , _ = require('lodash')
 ;
 
-
-var urn = [ CARDM ]
-  , grovepi = new Device(GROVEPIDEV)
-  , sensors = []
-  , devices = [ grovepi ]
-  , gpsPoints = _.noop()
-  , gpsCounter = 0
-;
-
-// Initializing REST server BEGIN
-const PORT = process.env.GPSPORT || 8888
-    , restURI = '/gps'
-    , resetURI = '/resetroute'
-;
-
 // GrovePi stuff
 var board    = undefined;
 var lastData = undefined;
