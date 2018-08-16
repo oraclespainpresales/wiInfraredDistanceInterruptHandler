@@ -143,7 +143,7 @@ grovepi.setUrn(urn);
 
 // GrovePi stuff
 var board    = undefined
-  , redLed   = { on: false, device: undefined };
+  , redLed   = { on: false, device: undefined }
   , lastData = undefined
   , timer    = undefined
 ;
