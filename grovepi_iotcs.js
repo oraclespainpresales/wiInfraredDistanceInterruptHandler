@@ -370,9 +370,6 @@ async.series( {
       var action = req.params.action.toUpperCase();
       var duration = req.params.duration;
       // Let's check the inputs
-      LED[
-        { color: RED, status: ON, duration: 123, device: device }
-      ]
       if (!LEDS || LEDS.length == 0) {
         res.status(400).send({
           result: "Failure",
