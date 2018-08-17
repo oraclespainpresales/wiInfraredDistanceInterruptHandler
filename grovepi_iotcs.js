@@ -344,47 +344,68 @@ async.series( {
                     var s = _.find(SENSORSCFG, { port: this.pin });
                     if (s.finishline) {
                       log.verbose(GROVEPI, 'Reached finish line!!');
-                      truckController.post('/stop', (err, req, res, obj) => {
-                        if (err) {
-                          log.error(REST, 'Error stoping the truck: ' + err);
-                          return;
+                      asycn.series( {
+                        check: (n) => {
+                          if ( _.isUndefined(gpsPoints)) {
+                            n("Cannot continue as route hasn't been set yet");
+                          } else {
+                            n();
+                          }
+                        },
+                        stopTruck: (n) => {
+                          truckController.post('/stop', (err, req, res, obj) => {
+                            if (err) {
+                              n('Error stoping the truck: ' + err);
+                            } else {
+                              log.verbose(REST, 'Truck successfully stopped');
+                              n();
+                            }
+                          });
+                        },
+                        sendGPS: (n) => {
+                          if ( !_.isUndefined(gpsPoints)) {
+                            if (gpsCounter > (gpsPoints.length - 1)) {
+                              gpsCounter = 0;
+                            }
+                            var coordinates = gpsPoints[gpsCounter];
+                            var sensorData = { ora_latitude: coordinates.lat, ora_longitude: coordinates.lon };
+                            var vd = grovepi.getIotVd(CARDM);
+                            if (vd) {
+                              log.verbose(GROVEPI, 'Ultrasonic onChange value (%d) = %s', gpsCounter, JSON.stringify(sensorData));
+                              vd.update(sensorData);
+                            } else {
+                              log.error(IOTCS, "URN not registered: " + INFRAREDDISTANCEINTERRUPTSENSOR);
+                            }
+                            gpsCounter++;
+                            n();
+                          } else {
+                            n("Cannot send GPS position as route hasn't been set yet");
+                          }
+                        },
+                        getCode: (n) => {
+                          var action = [
+                            { action: "on" },
+                            { action: "color", color: [255,255,255]},
+                            { action: "write", text: "Taking picture\nin 5 sec" },
+                            { action: "loop", param: { loops: 5, interval: 1000, reversed: true, action: "write", goto: [3, 1], raw: true, text: "%d" } },
+                            { action: "write", raw: true, goto: [3, 1], text: "0" },
+                            { action: "wait", time: 500 },
+                            { action: "clear" },
+                            { action: "color", color: [0,0,0]},
+                            { action: "wait", time: 500 },
+                            { action: "color", color: [255,255,255]},
+                            { action: "wait", time: 50 },
+                            { action: "off" },
+                          ];
+                          lcd.execute(action)
+                          .then(() => { log.verbose(REST, "LCD request completed successfully"); n() })
+                          .catch(() => { n("LCD request completed with errors") });
                         }
-                        log.verbose(REST, 'Truck successfully stopped');
-                        var action = [
-                          { action: "on" },
-                          { action: "color", color: [255,255,255]},
-                          { action: "write", text: "Taking picture\nin 5 sec" },
-                          { action: "loop", param: { loops: 5, interval: 1000, reversed: true, action: "write", goto: [3, 1], raw: true, text: "%d" } },
-                          { action: "write", raw: true, goto: [3, 1], text: "0" },
-                          { action: "wait", time: 500 },
-                          { action: "clear" },
-                          { action: "color", color: [0,0,0]},
-                          { action: "wait", time: 500 },
-                          { action: "color", color: [255,255,255]},
-                          { action: "wait", time: 50 },
-                          { action: "off" },
-                        ];
-                        lcd.execute(action)
-                        .then(() => { log.verbose(REST, "LCD request completed successfully") })
-                        .catch(() => { log.verbose(REST, "LCD request completed with errors") });
+                      }, (err) => {
+                        if (err) {
+                          log.error(PROCESS, err);
+                        }
                       });
-                    }
-                    if ( !_.isUndefined(gpsPoints)) {
-                      if (gpsCounter > (gpsPoints.length - 1)) {
-                        gpsCounter = 0;
-                      }
-                      var coordinates = gpsPoints[gpsCounter];
-                      var sensorData = { ora_latitude: coordinates.lat, ora_longitude: coordinates.lon };
-                      var vd = grovepi.getIotVd(CARDM);
-                      if (vd) {
-                        log.verbose(GROVEPI, 'Ultrasonic onChange value (%d) = %s', gpsCounter, JSON.stringify(sensorData));
-                        vd.update(sensorData);
-                      } else {
-                        log.error(IOTCS, "URN not registered: " + INFRAREDDISTANCEINTERRUPTSENSOR);
-                      }
-                      gpsCounter++;
-                    } else {
-                      log.error(IOTCS, "Cannot send GPS position as route hasn't been set yet");
                     }
                   }
                 }
