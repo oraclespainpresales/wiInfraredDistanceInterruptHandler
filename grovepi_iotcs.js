@@ -353,7 +353,7 @@ async.series( {
                         var action = [
                           { action: "on" },
                           { action: "color", color: [255,255,255]},
-                          { action: "write", clear: true, text: "Taking picture\nin 5 sec" }
+                          { action: "write", clear: true, text: "Taking picture\nin 5 sec" },
                           { action: "loop", param: { loops: 5, interval: 1000, reversed: true, action: "write", goto: [1, 3], text: "%d" } },
                           { action: "clear" },
                           { action: "color", color: [0,0,0]},
