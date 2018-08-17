@@ -45,7 +45,7 @@ method.execute = steps => {
         lcd.on();
         next();
       } else if ( step.action == OFF) {
-        lcd.on();
+        lcd.off();
         next();
       } else if ( step.action == WRITE) {
         if (step.clear) {

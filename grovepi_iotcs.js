@@ -116,13 +116,13 @@ dcl = dcl({debug: false});
 lcd.execute(
   [
     { action: "write", text: "Hi there", clear: true, color: [ 0, 0, 255 ] },
-    { action: "wait", time: 5000 },
+    { action: "wait", time: 1000 },
     { action: "clear" },
-    { action: "wait", time: 5000 },
+    { action: "wait", time: 1000 },
     { action: "color", color: [ 255, 0, 0 ] },
-    { action: "wait", time: 5000 },
+    { action: "wait", time: 1000 },
     { action: "write", text: "In red!!" },
-    { action: "wait", time: 5000 },
+    { action: "wait", time: 1000 },
     { action: "off" }
   ]).then(() => { console.log("done")});
 
