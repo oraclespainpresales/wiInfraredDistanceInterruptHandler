@@ -3,6 +3,7 @@
 // Module imports
 const async = require('async')
     , GrovePi = require('node-grovepi').GrovePi
+    , LCD = require('./lcd')
     , Device = require('./device')
     , SENSORSCFG = require('./sensors.json')
     , LEDSCFG = require('./leds.json')
@@ -15,9 +16,6 @@ const async = require('async')
     , getUsage = require('command-line-usage')
     , log = require('npmlog-ts')
     , _ = require('lodash')
-;
-
-var dcl = require('./device-library.node')
 ;
 
 // Initialize input arguments
@@ -96,27 +94,32 @@ if (!fs.existsSync(options.device)) {
 log.level = (options.verbose) ? 'verbose' : 'info';
 
 // IoTCS stuff
-dcl = dcl({debug: false});
-var storePassword = 'Welcome1';
 const GROVEPIDEV = "GrovePi+"
     , INFRAREDDISTANCEINTERRUPTSENSORDM = "urn:com:oracle:iot:device:grovepi:infrareddistanceinterrupt"
     , CARDM = "urn:oracle:iot:device:model:car"
     , storeFile = options.device
+    , storePassword = 'Welcome1'
 ;
 
-var urn = [ CARDM ]
+var dcl = require('./device-library.node')
+  , urn = [ CARDM ]
   , grovepi = new Device(GROVEPIDEV)
   , sensors = []
   , devices = [ grovepi ]
   , gpsPoints = _.noop()
   , gpsCounter = 0
+  , lcd = new LCD();
 ;
+
+dcl = dcl({debug: false});
+lcd.execute({ action: "hello" });
 
 // Initializing REST server BEGIN
 const PORT = process.env.GPSPORT || 8888
     , restURI = '/'
     , resetURI = '/gps/resetroute'
     , ledsURI  = '/leds/:led/:action/:duration?'
+    , lcdURI   = '/lcd'
     , RED = 'RED'
     , GREEN = 'GREEN'
     , ON = 'ON'
