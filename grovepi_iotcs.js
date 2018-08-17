@@ -115,13 +115,15 @@ var dcl = require('./device-library.node')
 dcl = dcl({debug: false});
 lcd.execute(
   [
-    { action: "write", text: "Hi there" },
+    { action: "write", text: "Hi there", clear: true, color: [ 0, 0, 255 ] },
     { action: "wait", time: 5000 },
     { action: "clear" },
     { action: "wait", time: 5000 },
     { action: "color", color: [ 255, 0, 0 ] },
     { action: "wait", time: 5000 },
-    { action: "write", text: "In red!!" }
+    { action: "write", text: "In red!!" },
+    { action: "wait", time: 5000 },
+    { action: "off" }
   ]).then(() => { console.log("done")});
 
 // Initializing REST server BEGIN
