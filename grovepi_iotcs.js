@@ -108,7 +108,7 @@ var dcl = require('./device-library.node')
   , devices = [ grovepi ]
   , gpsPoints = _.noop()
   , gpsCounter = 0
-  , lcd = new LCD();
+  , lcd = new LCD(log);
 ;
 
 dcl = dcl({debug: false});
