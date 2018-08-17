@@ -51,26 +51,30 @@ method.execute = steps => {
         if (step.clear) {
           lcd.clear();
           lcd.setCursor(0, 0);
+          next();
         }
         if (step.color) {
           lcd.setRGB(step.color[0], step.color[1], step.color[2]);
+          next();
         }
         if (step.text) {
           lcd.setText(step.text);
+          next();
         }
       } else if ( step.action == CLEAR) {
         lcd.clear();
         lcd.setCursor(0, 0);
+        next();
       } else if ( step.action == LOOP) {
         // TODO
       } else if ( step.action == COLOR) {
         if (step.color) {
           lcd.setRGB(step.color[0], step.color[1], step.color[2]);
+          next();
         }
       } else if ( step.action == WAIT) {
         sleep(step.time).then(() => next());
       }
-      next();
     }, (err) => {
       if (err) { reject(err) } else { resolve() }
     });
