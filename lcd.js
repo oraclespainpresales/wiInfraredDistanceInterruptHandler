@@ -68,7 +68,7 @@ method.execute = steps => {
           lcd.setRGB(step.color[0], step.color[1], step.color[2]);
         }
       } else if ( step.action == WAIT) {
-        sleep(step.ms).then(() => next());
+        sleep(step.time).then(() => next());
       }
       next();
     }, (err) => {
