@@ -75,15 +75,17 @@ method.execute = steps => {
           return;
         }
         loop(tids, step.param.loops, step.param.interval, (i) => {
-          console.log(lcd);
-          console.log("loop %d", i);
           if ( step.param.action == WRITE) {
             if (step.param.clear) {
               lcd.clear();
               lcd.setCursor(0, 0);
             }
             if (step.param.text) {
-              lcd.setText(step.param.text.replace('%d', i));
+              let c = i;
+              if (step.param.reversed) {
+                c = step.param.loops - i;
+              }
+              lcd.setText(step.param.text.replace('%d', c));
             }
           }
         }).then(() => {console.log("done"); next();});

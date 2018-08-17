@@ -116,9 +116,10 @@ dcl = dcl({debug: false});
 lcd.execute(
   [
     { action: "wait", time: 1000 },
-    { action: "loop", param: { loops: 5, interval: 1000, action: "wriite", text: "Taking picture\nin %d sec" } },
-    { action: "loop", param: { loops: 5, interval: 1000, action: "write", text: "Taking picture\nin %d sec" } },
-    { action: "off" }
+    { action: "loop", param: { loops: 5, interval: 1000, reversed: true, action: "write", text: "Taking picture\nin %d sec" } },
+    { action: "wait", time: 1000 },
+    { action: "on" },
+    { action: "write", text: "Back to live!" },
   ]).then(() => { console.log("done")});
 
 
