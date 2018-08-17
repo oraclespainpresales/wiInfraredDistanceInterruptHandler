@@ -57,7 +57,11 @@ method.execute = steps => {
           lcd.setRGB(step.color[0], step.color[1], step.color[2]);
         }
         if (step.text) {
-          lcd.setText(step.text);
+          if (step.raw) {
+            lcd.setTextRaw(step.text);
+          } else {
+            lcd.setText(step.text);
+          }
         }
         next();
       } else if ( step.action == CLEAR) {
