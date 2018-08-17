@@ -5,7 +5,7 @@ const {
 } = require('grove-lcd-rgb');
 
 const {
-    loop: _loop,
+    loop,
     sleep
 } = require('./helper');
 
@@ -39,12 +39,12 @@ method.execute = steps => {
       if (!step.action || !_.includes(VALIDACTIONS, step.action)) {
           log.error(LOG, "Unknown action '%s'. Valid actions: %s", step.action, VALIDACTIONS.join(", "));
           next();
-          return;
       }
       if ( step.action == ON) {
         lcd.on();
         next();
       } else if ( step.action == OFF) {
+        lcd.setRGB(0, 0, 0);
         lcd.off();
         next();
       } else if ( step.action == WRITE) {
@@ -64,7 +64,26 @@ method.execute = steps => {
         lcd.setCursor(0, 0);
         next();
       } else if ( step.action == LOOP) {
-        // TODO
+        if (!step.param || !step.param.loops || !step.param.interval ) {
+          log.error(LOG, "Invalid loop action: %j", step.param);
+          next();
+        }
+        if (!step.param.action || !_.includes(VALIDACTIONS, step.param.action)) {
+          log.error(LOG, "Unknown loop action '%s'. Valid actions: %s", step.param.action, VALIDACTIONS.join(", "));
+          next();
+        }
+
+        loop(tids, step.param.loops, step.param.interval, (i) => {
+          if ( step.param.action == WRITE) {
+            if (step.param.clear) {
+              lcd.clear();
+              lcd.setCursor(0, 0);
+            }
+            if (step.param.text) {
+              lcd.setText(step.param.text.replace('%d', i));
+            }
+          }
+        }).then(() => {next()});
       } else if ( step.action == COLOR) {
         if (step.color) {
           lcd.setRGB(step.color[0], step.color[1], step.color[2]);
