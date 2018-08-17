@@ -83,7 +83,7 @@ method.execute = steps => {
             if (step.param.text) {
               let c = i;
               if (step.param.reversed) {
-                c = step.param.loops - i;
+                c = step.param.loops + 1 - i;
               }
               lcd.setText(step.param.text.replace('%d', c));
             }
