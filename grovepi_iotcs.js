@@ -401,7 +401,6 @@ async.series( {
                           log.error(IOTCS, "URN not registered: " + INFRAREDDISTANCEINTERRUPTSENSOR);
                         }
                         gpsCounter++;
-                        n();
                       } else {
                         log.error(IOTCS, "Cannot send GPS position as route hasn't been set yet");
                       }
