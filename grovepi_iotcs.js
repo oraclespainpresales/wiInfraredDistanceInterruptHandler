@@ -113,20 +113,7 @@ var dcl = require('./device-library.node')
 ;
 
 dcl = dcl({debug: false});
-lcd.execute(
-  [
-    { action: "on" }, 
-    { action: "wait", time: 1000 },
-    { action: "loop", param: { loops: 5, interval: 1000, reversed: true, action: "write", text: "Taking picture\nin %d sec" } },
-    { action: "wait", time: 1000 },
-    { action: "off" },
-    { action: "wait", time: 1000 },
-    { action: "on" },
-    { action: "write", text: "Back to live!", color: [ 255, 255, 255 ] },
-  ]).then(() => { console.log("done")});
 
-
-/**
 // Initializing REST server BEGIN
 const PORT = process.env.GPSPORT || 8888
     , restURI = '/'
@@ -406,6 +393,16 @@ async.series( {
       gpsCounter = 0;
       log.verbose(REST, "New route received successfully with %d points", req.body.length);
     });
+    router.post(lcdURI, (req, res) => {
+      log.verbose(REST, "LCD request with actions: %j", req.body);
+      var actions = req.body;
+      lcd.execute(req.body)
+      .then(() => { log.verbose(REST, "LCD request completed successfully") })
+      .catch(() => { log.verbose(REST, "LCD request completed with errors") });
+      res.status(204).send();
+      res.end();
+      return;
+    });
     router.get(ledsURI, (req, res) => {
       // /leds/:led/:action/:duration?
       var led = req.params.led.toUpperCase();
@@ -492,4 +489,3 @@ async.series( {
     log.info(PROCESS, 'Initialization completed');
   }
 });
-**/
