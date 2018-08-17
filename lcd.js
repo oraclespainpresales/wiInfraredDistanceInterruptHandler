@@ -77,6 +77,7 @@ method.execute = steps => {
         loop(tids, step.param.loops, step.param.interval, (i) => {
           if ( step.param.action == WRITE) {
             if (step.param.clear) {
+              console.log("clearing!!");
               lcd.clear();
               lcd.setCursor(0, 0);
             }
@@ -88,7 +89,7 @@ method.execute = steps => {
               lcd.setText(step.param.text.replace('%d', c));
             }
           }
-        }).then(() => {console.log("done"); next();});
+        }).then(() => {next();});
       } else if ( step.action == COLOR) {
         if (step.color) {
           lcd.setRGB(step.color[0], step.color[1], step.color[2]);
