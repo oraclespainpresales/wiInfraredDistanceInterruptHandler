@@ -104,6 +104,10 @@ method.execute = steps => {
   });
 }
 
+method.color = (r,g,b) => {
+  lcd.setRGB(r, g, b);
+}
+
 method.off = () => {
   lcd.off();
 }

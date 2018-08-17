@@ -208,7 +208,7 @@ var processing = false;
 async.series( {
   lcd: (callbackMainSeries) => {
     lcd.clear();
-    lcd.off();
+    lcd.color(0, 0, 0);
     callbackMainSeries(null, true);
   },
   internet: (callbackMainSeries) => {
@@ -354,12 +354,11 @@ async.series( {
                           { action: "on" },
                           { action: "color", color: [255,255,255]},
                           { action: "loop", param: { loops: 5, interval: 1000, reversed: true, action: "write", text: "Taking picture\nin %d sec" } },
-                          { action: "wait", time: 500 },
                           { action: "clear" },
                           { action: "color", color: [0,0,0]},
                           { action: "wait", time: 500 },
                           { action: "color", color: [255,255,255]},
-                          { action: "wait", time: 500 },
+                          { action: "wait", time: 100 },
                           { action: "off" },
                         ];
                         lcd.execute(action)
