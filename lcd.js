@@ -31,8 +31,11 @@ function LCD(_log) {
 
 method.execute = steps => {
   return new Promise( (resolve, reject) => {
+    if (!_.isArray(steps)) {
+      log.error(LOG, "Execute object not an array");
+      reject();
+    }
     async.eachSeries(steps, (step, next) => {
-      console.log(step);
       if (!step.action || !_.includes(VALIDACTIONS, step.action)) {
           log.error(LOG, "Unknown action '%s'. Valid actions: %s", step.action, VALIDACTIONS.join(", "));
           next();
