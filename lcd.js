@@ -67,12 +67,13 @@ method.execute = steps => {
         if (!step.param || !step.param.loops || !step.param.interval ) {
           log.error(LOG, "Invalid loop action: %j", step.param);
           next();
+          return;
         }
         if (!step.param.action || !_.includes(VALIDACTIONS, step.param.action)) {
           log.error(LOG, "Unknown loop action '%s'. Valid actions: %s", step.param.action, VALIDACTIONS.join(", "));
           next();
+          return;
         }
-
         loop(tids, step.param.loops, step.param.interval, (i) => {
           console.log(lcd);
           console.log("loop %d", i);

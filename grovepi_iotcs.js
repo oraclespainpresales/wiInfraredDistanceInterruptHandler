@@ -116,10 +116,12 @@ dcl = dcl({debug: false});
 lcd.execute(
   [
     { action: "wait", time: 1000 },
-    { action: "loop", param: { loops: 5, interval: 1000, action: "wirite", text: "Taking picture\nin %d sec" } },
+    { action: "loop", param: { loops: 5, interval: 1000, action: "wriite", text: "Taking picture\nin %d sec" } },
     { action: "off" }
   ]).then(() => { console.log("done")});
 
+
+/**
 // Initializing REST server BEGIN
 const PORT = process.env.GPSPORT || 8888
     , restURI = '/'
@@ -485,3 +487,4 @@ async.series( {
     log.info(PROCESS, 'Initialization completed');
   }
 });
+**/
