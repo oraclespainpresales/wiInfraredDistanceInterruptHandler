@@ -115,13 +115,14 @@ var dcl = require('./device-library.node')
 dcl = dcl({debug: false});
 lcd.execute(
   [
+    { action: "on" }, 
     { action: "wait", time: 1000 },
     { action: "loop", param: { loops: 5, interval: 1000, reversed: true, action: "write", text: "Taking picture\nin %d sec" } },
     { action: "wait", time: 1000 },
     { action: "off" },
     { action: "wait", time: 1000 },
     { action: "on" },
-    { action: "write", text: "Back to live!" },
+    { action: "write", text: "Back to live!", color: [ 255, 255, 255 ] },
   ]).then(() => { console.log("done")});
 
 
