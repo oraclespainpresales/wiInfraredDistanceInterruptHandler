@@ -344,7 +344,7 @@ async.series( {
                     var s = _.find(SENSORSCFG, { port: this.pin });
                     if (s.finishline) {
                       log.verbose(GROVEPI, 'Reached finish line!!');
-                      asycn.series( {
+                      async.series( {
                         check: (n) => {
                           if ( _.isUndefined(gpsPoints)) {
                             n("Cannot continue as route hasn't been set yet");
