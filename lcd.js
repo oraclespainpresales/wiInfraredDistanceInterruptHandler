@@ -108,6 +108,10 @@ method.off = () => {
   lcd.off();
 }
 
+method.clear = () => {
+  lcd.clear();
+}
+
 method.write = text => {
   lcd.setText(text);
 }
