@@ -143,7 +143,7 @@ var client = restify.createJsonClient({
   }
 });
 var truckController = restify.createJsonClient({
-  url: "localhost:7877",
+  url: "http://localhost:7877",
   headers: {
     "accept": "application/json"
   }
@@ -326,7 +326,6 @@ async.series( {
                   pre = flag;
                   if (flag == true) {
                     // Got it!!
-                    console.log(this.pin);
                     var s = _.find(SENSORSCFG, { port: this.pin });
                     if (s.finishline) {
                       log.verbose(GROVEPI, 'Reached finish line!!');
