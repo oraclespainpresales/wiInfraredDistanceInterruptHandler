@@ -117,6 +117,7 @@ lcd.execute(
   [
     { action: "wait", time: 1000 },
     { action: "loop", param: { loops: 5, interval: 1000, action: "wriite", text: "Taking picture\nin %d sec" } },
+    { action: "loop", param: { loops: 5, interval: 1000, action: "write", text: "Taking picture\nin %d sec" } },
     { action: "off" }
   ]).then(() => { console.log("done")});
 
