@@ -77,12 +77,10 @@ method.execute = steps => {
         }
         loop(tids, step.param.loops, step.param.interval, (i) => {
           if ( step.param.action == WRITE) {
-            /**
             if (step.param.clear) {
               lcd.clear();
               lcd.setCursor(0, 0);
             }
-            **/
             if (step.param.goto) {
               lcd.setCursor(step.param.goto[0], step.param.goto[1]);
             }
@@ -91,7 +89,12 @@ method.execute = steps => {
               if (step.param.reversed) {
                 c = step.param.loops + 1 - i;
               }
-              lcd.setText(step.param.text.replace('%d', c));
+              var text = step.param.text.replace('%d', c);
+              if (step.param.raw) {
+                lcd.setTextRaw(text);
+              } else {
+                lcd.setText(text);
+              }
             }
           }
         }).then(() => {next()});
