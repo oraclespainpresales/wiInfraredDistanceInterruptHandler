@@ -45,6 +45,7 @@ method.execute = steps => {
         next();
       } else if ( step.action == OFF) {
         lcd.setRGB(0, 0, 0);
+        lcd.clear();
         lcd.off();
         next();
       } else if ( step.action == WRITE) {
