@@ -22,4 +22,8 @@ method.execute = steps => {
   console.log(steps);
 }
 
+method.off = () => {
+  lcd.off();
+}
+
 module.exports = LCD;
