@@ -92,6 +92,7 @@ if (!fs.existsSync(options.device)) {
 }
 
 log.level = (options.verbose) ? 'verbose' : 'info';
+log.timestamp = true;
 
 // IoTCS stuff
 const GROVEPIDEV = "GrovePi+"
@@ -170,7 +171,6 @@ const PROCESS = 'PROCESS';
 const IOTCS   = 'IOTCS';
 const GROVEPI = 'GROVEPI';
 const REST    = 'REST';
-log.timestamp = true;
 
 // device class helper
 function getModel(device, urn, callback) {
