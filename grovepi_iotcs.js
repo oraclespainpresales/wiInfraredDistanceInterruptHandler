@@ -355,7 +355,7 @@ async.series( {
                           { action: "clear" },
                           { action: "color", color: [0,0,0]},
                           { action: "color", color: [255,255,255]},
-                          { action: "wait", time: 1 },
+                          { action: "wait", time: 500 },
                           { action: "off" },
                         ];
                         lcd.execute(action)
