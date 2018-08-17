@@ -142,6 +142,12 @@ var client = restify.createJsonClient({
     "accept": "application/json"
   }
 });
+var truckController = restify.createJsonClient({
+  url: "localhost:7877",
+  headers: {
+    "accept": "application/json"
+  }
+});
 // Initializing REST client END
 
 // Init Devices
@@ -319,6 +325,8 @@ async.series( {
                 if (pre !== flag) {
                   pre = flag;
                   if (flag == true) {
+                    // Got it!!
+                    console.log(this);
                     if ( !_.isUndefined(gpsPoints)) {
                       if (gpsCounter > (gpsPoints.length - 1)) {
                         gpsCounter = 0;
@@ -430,6 +438,8 @@ async.series( {
         LED.status = BLINK;
         LED.blink = {};
         LED.blink.status = OFF;
+        // We will NOT accept blinking interval less than 300. Somehow it blocks the whole code.
+        if (duration < 300) { duration = 300 }
         LED.blink.interval = setInterval(() => {
           if (LED.blink.status === OFF) {
               LED.device.turnOn();
