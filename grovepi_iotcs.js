@@ -118,6 +118,8 @@ lcd.off();
 
 // Initializing REST server BEGIN
 const PORT = process.env.GPSPORT || 8888
+    , READERPORT = 8886
+    , readerTakePicture = '/reader/take'
     , restURI = '/'
     , resetURI = '/gps/resetroute'
     , ledsURI  = '/leds/:led/:action/:duration?'
@@ -136,7 +138,7 @@ var app    = express()
 // Initializing REST server END
 
 // Initializing REST client BEGIN
-var client = restify.createJsonClient({
+var iotClient = restify.createJsonClient({
   url: options.iotcs,
   connectTimeout: 1000,
   requestTimeout: 1000,
@@ -149,6 +151,12 @@ var client = restify.createJsonClient({
 });
 var truckController = restify.createJsonClient({
   url: "http://localhost:7877",
+  headers: {
+    "accept": "application/json"
+  }
+});
+var readerClient = restify.createJsonClient({
+  url: "http://localhost:" + READERPORT,
   headers: {
     "accept": "application/json"
   }
@@ -210,7 +218,7 @@ async.series( {
     }, (cb, results) => {
       retries++;
       log.verbose(PROCESS, "Trying to reach server %s (attempt %d)", options.iotcs, retries);
-      client.get(URI, function(err, req, res, obj) {
+      iotClient.get(URI, function(err, req, res, obj) {
         if (err) {
           if (err.statusCode === 401 || err.statusCode === 404) {
             cb(null, "OK");
@@ -339,6 +347,20 @@ async.series( {
                           return;
                         }
                         log.verbose(REST, 'Truck successfully stopped');
+                        var action = [
+                          { action: "on" },
+                          { action: "color", color: [255,255,255]},
+                          { action: "loop", param: { loops: 5, interval: 1000, reversed: true, action: "write", text: "Taking picture\nin %d sec" } },
+                          { action: "wait", time: 500 },
+                          { action: "clear" },
+                          { action: "color", color: [0,0,0]},
+                          { action: "color", color: [255,255,255]},
+                          { action: "wait", time: 1 },
+                          { action: "off" },
+                        ];
+                        lcd.execute(action)
+                        .then(() => { log.verbose(REST, "LCD request completed successfully") })
+                        .catch(() => { log.verbose(REST, "LCD request completed with errors") });
                       });
                     }
                     if ( !_.isUndefined(gpsPoints)) {
