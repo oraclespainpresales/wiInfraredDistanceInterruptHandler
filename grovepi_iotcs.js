@@ -362,26 +362,6 @@ async.series( {
                             }
                           });
                         },
-                        sendGPS: (n) => {
-                          if ( !_.isUndefined(gpsPoints)) {
-                            if (gpsCounter > (gpsPoints.length - 1)) {
-                              gpsCounter = 0;
-                            }
-                            var coordinates = gpsPoints[gpsCounter];
-                            var sensorData = { ora_latitude: coordinates.lat, ora_longitude: coordinates.lon };
-                            var vd = grovepi.getIotVd(CARDM);
-                            if (vd) {
-                              log.verbose(GROVEPI, 'Ultrasonic onChange value (%d) = %s', gpsCounter, JSON.stringify(sensorData));
-                              vd.update(sensorData);
-                            } else {
-                              log.error(IOTCS, "URN not registered: " + INFRAREDDISTANCEINTERRUPTSENSOR);
-                            }
-                            gpsCounter++;
-                            n();
-                          } else {
-                            n("Cannot send GPS position as route hasn't been set yet");
-                          }
-                        },
                         getCode: (n) => {
                           var action = [
                             { action: "on" },
@@ -406,6 +386,25 @@ async.series( {
                           log.error(PROCESS, err);
                         }
                       });
+                    } else {
+                      if ( !_.isUndefined(gpsPoints)) {
+                        if (gpsCounter > (gpsPoints.length - 1)) {
+                          gpsCounter = 0;
+                        }
+                        var coordinates = gpsPoints[gpsCounter];
+                        var sensorData = { ora_latitude: coordinates.lat, ora_longitude: coordinates.lon };
+                        var vd = grovepi.getIotVd(CARDM);
+                        if (vd) {
+                          log.verbose(GROVEPI, 'Ultrasonic onChange value (%d) = %s', gpsCounter, JSON.stringify(sensorData));
+                          vd.update(sensorData);
+                        } else {
+                          log.error(IOTCS, "URN not registered: " + INFRAREDDISTANCEINTERRUPTSENSOR);
+                        }
+                        gpsCounter++;
+                        n();
+                      } else {
+                        log.error(IOTCS, "Cannot send GPS position as route hasn't been set yet");
+                      }
                     }
                   }
                 }
