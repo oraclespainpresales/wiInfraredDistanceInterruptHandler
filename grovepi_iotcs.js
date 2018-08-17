@@ -326,7 +326,16 @@ async.series( {
                   pre = flag;
                   if (flag == true) {
                     // Got it!!
-                    console.log(this);
+                    console.log(this.pin);
+                    var s = _.find(SENSORSCFG, { port: this.pin });
+                    if (!s) {
+                      // Not found!???
+                      // TODO
+                      return;
+                    }
+                    if (s.finishline) {
+                      console.log("FINISH LINE!!!");
+                    }
                     if ( !_.isUndefined(gpsPoints)) {
                       if (gpsCounter > (gpsPoints.length - 1)) {
                         gpsCounter = 0;
