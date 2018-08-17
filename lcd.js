@@ -56,6 +56,9 @@ method.execute = steps => {
         if (step.color) {
           lcd.setRGB(step.color[0], step.color[1], step.color[2]);
         }
+        if (step.goto) {
+          lcd.setCursor(step.param.goto[0], step.param.goto[1]);
+        }
         if (step.text) {
           if (step.raw) {
             lcd.setTextRaw(step.text);
