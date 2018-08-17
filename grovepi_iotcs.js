@@ -112,9 +112,7 @@ var dcl = require('./device-library.node')
 ;
 
 dcl = dcl({debug: false});
-lcd.execute({ action: "hello" });
-lcd.write("Hello world");
-lcd.off();
+lcd.execute({ action: "write", text: "Hi there" }).then(() => { console.log("done")});
 
 // Initializing REST server BEGIN
 const PORT = process.env.GPSPORT || 8888
