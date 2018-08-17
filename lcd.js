@@ -26,4 +26,8 @@ method.off = () => {
   lcd.off();
 }
 
+method.write = text => {
+  lcd.setText(text);
+}
+
 module.exports = LCD;
