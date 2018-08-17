@@ -81,6 +81,9 @@ method.execute = steps => {
               lcd.clear();
               lcd.setCursor(0, 0);
             }
+            if (step.param.goto) {
+              lcd.setCursor(step.param.goto[0], step.param.goto[1]);
+            }
             if (step.param.text) {
               let c = i;
               if (step.param.reversed) {
