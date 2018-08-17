@@ -328,13 +328,15 @@ async.series( {
                     // Got it!!
                     console.log(this.pin);
                     var s = _.find(SENSORSCFG, { port: this.pin });
-                    if (!s) {
-                      // Not found!???
-                      // TODO
-                      return;
-                    }
                     if (s.finishline) {
-                      console.log("FINISH LINE!!!");
+                      log.verbose(GROVEPI, 'Reached finish line!!');
+                      truckController.post('/stop', (err, req, res, obj) => {
+                        if (err) {
+                          log.error(REST, 'Error stoping the truck: ' + err);
+                          return;
+                        }
+                        log.verbose(REST, 'Truck successfully stopped');
+                      });
                     }
                     if ( !_.isUndefined(gpsPoints)) {
                       if (gpsCounter > (gpsPoints.length - 1)) {
