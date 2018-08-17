@@ -394,13 +394,13 @@ async.series( {
       log.verbose(REST, "New route received successfully with %d points", req.body.length);
     });
     router.post(lcdURI, (req, res) => {
+      res.status(204).send();
+      res.end();
       log.verbose(REST, "LCD request with actions: %j", req.body);
       var actions = req.body;
       lcd.execute(req.body)
       .then(() => { log.verbose(REST, "LCD request completed successfully") })
       .catch(() => { log.verbose(REST, "LCD request completed with errors") });
-      res.status(204).send();
-      res.end();
       return;
     });
     router.get(ledsURI, (req, res) => {

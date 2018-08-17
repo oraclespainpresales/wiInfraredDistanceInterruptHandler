@@ -77,7 +77,6 @@ method.execute = steps => {
         loop(tids, step.param.loops, step.param.interval, (i) => {
           if ( step.param.action == WRITE) {
             if (step.param.clear) {
-              console.log("clearing!!");
               lcd.clear();
               lcd.setCursor(0, 0);
             }
