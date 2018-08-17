@@ -356,6 +356,7 @@ async.series( {
                           { action: "write", text: "Taking picture\nin 5 sec" },
                           { action: "loop", param: { loops: 5, interval: 1000, reversed: true, action: "write", goto: [3, 1], raw: true, text: "%d" } },
                           { action: "write", raw: true, goto: [3, 1], text: "0" },
+                          { action: "wait", time: 500 },
                           { action: "clear" },
                           { action: "color", color: [0,0,0]},
                           { action: "wait", time: 500 },
