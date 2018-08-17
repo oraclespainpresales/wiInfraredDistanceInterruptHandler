@@ -33,7 +33,7 @@ method.execute = steps => {
   return new Promise( (resolve, reject) => {
     async.eachSeries(steps, (step, next) => {
       if (!step.action || !_.includes(VALIDACTIONS, step.action)) {
-          log.warning(LOG, "Unknown action. Valid actions: %s", VALIDACTIONS.join(", "));
+          log.error(LOG, "Unknown action '%s'. Valid actions: %s", step.action, VALIDACTIONS.join(", "));
           next();
           return;
       }
