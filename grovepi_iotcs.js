@@ -113,8 +113,6 @@ var dcl = require('./device-library.node')
 ;
 
 dcl = dcl({debug: false});
-lcd.clear();
-lcd.off();
 
 // Initializing REST server BEGIN
 const PORT = process.env.GPSPORT || 8888
@@ -208,6 +206,11 @@ var flag = undefined;
 var processing = false;
 
 async.series( {
+  lcd: (callbackMainSeries) => {
+    lcd.clear();
+    lcd.off();
+    callbackMainSeries(null, true);
+  },
   internet: (callbackMainSeries) => {
     log.info(PROCESS, "Checking for Internet & IoTCS server availability...");
     var URI = "/iot/api/v1/private/server";
@@ -354,6 +357,7 @@ async.series( {
                           { action: "wait", time: 500 },
                           { action: "clear" },
                           { action: "color", color: [0,0,0]},
+                          { action: "wait", time: 500 },
                           { action: "color", color: [255,255,255]},
                           { action: "wait", time: 500 },
                           { action: "off" },
