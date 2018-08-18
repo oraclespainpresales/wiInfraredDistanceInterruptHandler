@@ -12,6 +12,7 @@ const async = require('async')
     , bodyParser = require('body-parser')
     , restify = require('restify')
     , fs = require('fs-extra')
+    , glob = require("glob")
     , commandLineArgs = require('command-line-args')
     , getUsage = require('command-line-usage')
     , log = require('npmlog-ts')
@@ -264,8 +265,14 @@ async.series( {
         callbackMainSeries(new Error("No truck information found for demozone '" + options.demozone + "'"));
         return;
       }
+      log.verbose(IOTCS, "Devices registered: %j", body.items);
       // Remove any existing .conf file
-      fs.removeSync('*.conf');
+      // We keep it async as it should have finished before we're creating the new files... hopefully
+      glob('*.conf', (er, files) => {
+        _.forEach(files, (f) => {
+          fs.removeSync(f);
+        });
+      });
       async.eachSeries( body.items, (truck, nextTruck) => {
         log.verbose(IOTCS, "Retrieving provisioning data for device '%s'", truck.truckid);
         apexClient.get(GETIOTDEVICEDATA.replace(':demozone', options.demozone).replace(':deviceid', truck.truckid), (_err, _req, _res, _body) => {
@@ -281,6 +288,7 @@ async.series( {
           var file = truck.truckid.toUpperCase() + '.conf';
           fs.outputFileSync(file, _body.provisiondata);
           log.verbose(IOTCS, "Data file created successfully: %s", file);
+          nextTruck();
         });
       }, (err) => {
         callbackMainSeries(err);
