@@ -256,13 +256,11 @@ async.series( {
     log.info(IOTCS, "Retrieving IoT Truck devices for demozone '%s'", options.demozone);
     apexClient.get(GETTRUCKS.replace(':demozone', options.demozone), function(err, req, res, body) {
       if (err || res.statusCode != 200) {
-        log.error(APEX, "Error retrieving truck information: " + err);
-        callbackMainSeries(err, false);
+        callbackMainSeries(new Error("Error retrieving truck information: " + err));
         return;
       }
       if (!body || !body.items || body.items.length == 0) {
-        log.error(APEX, "No truck information found for demozone '%s'", options.demozone);
-        callbackMainSeries(err, false);
+        callbackMainSeries(new Error("No truck information found for demozone '%s'", options.demozone));
         return;
       }
       console.log(obj);
@@ -561,7 +559,7 @@ async.series( {
   }
 }, (err, results) => {
   if (err) {
-    log.error(PROCESS, "Severe error. Aborting.");
+    log.error(PROCESS, "Aborting.Severe error: " + err);
   } else {
     log.info(PROCESS, 'Initialization completed');
   }
