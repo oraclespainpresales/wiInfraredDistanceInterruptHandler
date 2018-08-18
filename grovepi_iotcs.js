@@ -456,7 +456,7 @@ async.series( {
                         }
                         gpsCounter++;
                       } else {
-                        log.error(IOTCS, "Cannot send GPS position as route hasn't been set yet");
+                        log.error(IOTCS, "Cannot send GPS position as truck hasn't been selected and route hasn't been set yet");
                       }
                     }
                   }
@@ -492,6 +492,7 @@ async.series( {
         message: "Route reset successfully for truck " + req.body.truck + " with " + req.body.gps.length + " GPS points"
       });
       res.end();
+      console.log(body);
       gpsPoints = req.body.gps;
       selectedTruck = req.body.truck;
       gpsCounter = 0;
