@@ -295,7 +295,7 @@ async.series( {
     });
   },
   iot: (callbackMainSeries) => {
-    log.info(IOTCS, "Initializing IoTCS devices");
+    log.info(IOTCS, "Initializing IoTCS device(s)");
     log.info(IOTCS, "Using IoTCS JavaScript Libraries v" + dcl.version);
     async.eachSeries( devices, (d, callbackEachSeries) => {
       async.series( [
@@ -354,7 +354,7 @@ async.series( {
       if (err) {
         callbackMainSeries(err);
       } else {
-        log.info(IOTCS, "IoTCS device initialized successfully");
+        log.info(IOTCS, "IoTCS device(s) initialized successfully");
         callbackMainSeries(null, true);
       }
     });
@@ -491,7 +491,8 @@ async.series( {
         message: "Route reset successfully with " + req.body.length + " GPS points"
       });
       res.end();
-      gpsPoints = req.body;
+      console.log(req.body);
+      gpsPoints = req.body.gps;
       gpsCounter = 0;
       log.verbose(REST, "New route received successfully with %d points", req.body.length);
     });
