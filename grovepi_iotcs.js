@@ -94,15 +94,13 @@ log.timestamp = true;
 const GROVEPIDEV = "GrovePi+"
     , INFRAREDDISTANCEINTERRUPTSENSORDM = "urn:com:oracle:iot:device:grovepi:infrareddistanceinterrupt"
     , CARDM = "urn:oracle:iot:device:model:car"
-    , storeFile = options.device
     , storePassword = 'Welcome1'
 ;
 
 var dcl = require('./device-library.node')
   , urn = [ CARDM ]
-  , grovepi = new Device(GROVEPIDEV)
   , sensors = []
-  , devices = [ grovepi ]
+  , devices = []
   , gpsPoints = _.noop()
   , gpsCounter = 0
   , lcd = new LCD(log);
@@ -170,10 +168,6 @@ var readerClient = restify.createJsonClient({
   }
 });
 // Initializing REST client END
-
-// Init Devices
-grovepi.setStoreFile(storeFile, storePassword);
-grovepi.setUrn(urn);
 
 // GrovePi stuff
 var board      = undefined
@@ -265,7 +259,7 @@ async.series( {
         callbackMainSeries(new Error("No truck information found for demozone '" + options.demozone + "'"));
         return;
       }
-      log.verbose(IOTCS, "Devices registered: %j", body.items);
+      log.verbose(IOTCS, "Devices registered for demozone '%s': %s",  options.demozone, _.map(body.items, 'truckid').join(', '));
       // Remove any existing .conf file
       // We keep it async as it should have finished before we're creating the new files... hopefully
       glob('*.conf', (er, files) => {
@@ -287,6 +281,11 @@ async.series( {
           // We have the device ID and the provisioning data. Create the provisioning file
           var file = truck.truckid.toUpperCase() + '.conf';
           fs.outputFileSync(file, _body.provisiondata);
+          // Create and init Device object and push it to the array
+          var device = new Device(truck.truckid.toUpperCase());
+          device.setStoreFile(truck.truckid.toUpperCase() + '.conf', storePassword);
+          device.setUrn(urn);
+          devices.push(device);
           log.verbose(IOTCS, "Data file created successfully: %s", file);
           nextTruck();
         });
@@ -296,7 +295,6 @@ async.series( {
     });
   },
   iot: (callbackMainSeries) => {
-    process.exit(2);
     log.info(IOTCS, "Initializing IoTCS devices");
     log.info(IOTCS, "Using IoTCS JavaScript Libraries v" + dcl.version);
     async.eachSeries( devices, (d, callbackEachSeries) => {
@@ -362,6 +360,7 @@ async.series( {
     });
   },
   grovepi: (callbackMainSeries) => {
+    process.exit(2);
     log.info(GROVEPI, "Initializing GrovePi devices");
     if (board)
       callbackMainSeries(null, true);
