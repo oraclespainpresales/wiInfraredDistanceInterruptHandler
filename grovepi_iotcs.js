@@ -492,7 +492,6 @@ async.series( {
         message: "Route reset successfully for truck " + req.body.truck + " with " + req.body.gps.length + " GPS points"
       });
       res.end();
-      console.log(req.body);
       gpsPoints = req.body.gps;
       selectedTruck = req.body.truck;
       gpsCounter = 0;
