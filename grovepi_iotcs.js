@@ -35,11 +35,11 @@ const sections = [
     header: 'Options',
     optionList: [
       {
-        name: 'device',
-        typeLabel: '[underline]{file}',
+        name: 'demozone',
+        typeLabel: '[underline]{demozone}',
         alias: 'd',
         type: String,
-        description: 'Device configuration file (.conf)'
+        description: 'Demozone for this RPi device'
       },
       {
         name: 'iotcs',
@@ -76,7 +76,7 @@ if (options.help) {
   process.exit(0);
 }
 
-if (!options.device) {
+if (!options.demozone) {
   console.log(getUsage(sections));
   process.exit(-1);
 }
@@ -115,7 +115,9 @@ var dcl = require('./device-library.node')
 dcl = dcl({debug: false});
 
 // Initializing REST server BEGIN
-const PORT = process.env.GPSPORT || 8888
+const APEXURL = 'https://apex.digitalpracticespain.com'
+    , GETTRUCKS = '/ords/pdb1/wedoindustry/trucks/:demozone'
+    , PORT = process.env.GPSPORT || 8888
     , READERPORT = 8886
     , readerTakePicture = '/reader/take'
     , restURI = '/'
@@ -136,6 +138,17 @@ var app    = express()
 // Initializing REST server END
 
 // Initializing REST client BEGIN
+var apexClient = restify.createJsonClient({
+  url: APEXURL,
+  connectTimeout: 1000,
+  requestTimeout: 1000,
+  retry: false,
+  rejectUnauthorized: false,
+  headers: {
+    "content-type": "application/json",
+    "accept": "application/json"
+  }
+});
 var iotClient = restify.createJsonClient({
   url: options.iotcs,
   connectTimeout: 1000,
@@ -174,10 +187,12 @@ var board      = undefined
 ;
 
 // Misc
-const PROCESS = 'PROCESS';
-const IOTCS   = 'IOTCS';
-const GROVEPI = 'GROVEPI';
-const REST    = 'REST';
+const PROCESS = 'PROCESS'
+    , IOTCS   = 'IOTCS'
+    , GROVEPI = 'GROVEPI'
+    , REST    = 'REST'
+    , APEX    = 'APEX'
+;
 
 // device class helper
 function getModel(device, urn, callback) {
@@ -240,6 +255,18 @@ async.series( {
       }
       log.info(PROCESS, "Server %s seems up & running...", options.iotcs);
       callbackMainSeries(null, true);
+    });
+  },
+  devices: (callbackMainSeries) => {
+    log.info(IOTCS, "Retrieving IoT Truck devices for demozone '%s'", options.demozone);
+    apexClient.get(GETTRUCKS, function(err, req, res, obj) {
+      if (err || res.statusCode != 200) {
+        log.error(APEX, "Error retrieving truck information: " + err);
+        callbackMainSeries(err, false);
+        return;
+      }
+      console.log(obj);
+      process.exit(2);
     });
   },
   iot: (callbackMainSeries) => {
@@ -534,6 +561,7 @@ async.series( {
   }
 }, (err, results) => {
   if (err) {
+    log.error(PROCESS, "Severe error. Aborting.");
   } else {
     log.info(PROCESS, 'Initialization completed');
   }

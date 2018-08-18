@@ -26,7 +26,6 @@ var log = _.noop();
 
 function LCD(_log) {
   log = _log;
-  log.info(LOG, "Constructor");
 }
 
 method.execute = steps => {
