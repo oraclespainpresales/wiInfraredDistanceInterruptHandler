@@ -86,11 +86,6 @@ if (!options.iotcs) {
   process.exit(-1);
 }
 
-if (!fs.existsSync(options.device)) {
-  log.error("", "Device file %s does not exist or is not readable", options.device);
-  process.exit(-1);
-}
-
 log.level = (options.verbose) ? 'verbose' : 'info';
 log.timestamp = true;
 
