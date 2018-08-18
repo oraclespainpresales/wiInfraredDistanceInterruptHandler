@@ -101,6 +101,7 @@ var dcl = require('./device-library.node')
   , urn = [ CARDM ]
   , sensors = []
   , devices = []
+  , selectedTruck = _.noop();
   , gpsPoints = _.noop()
   , gpsCounter = 0
   , lcd = new LCD(log);
@@ -445,9 +446,10 @@ async.series( {
                         }
                         var coordinates = gpsPoints[gpsCounter];
                         var sensorData = { ora_latitude: coordinates.lat, ora_longitude: coordinates.lon };
-                        var vd = grovepi.getIotVd(CARDM);
+                        var d = _.find(devices, (o) => { return o.getName() == selectedTruck });
+                        var vd = d.getIotVd(CARDM);
                         if (vd) {
-                          log.verbose(GROVEPI, 'Ultrasonic onChange value (%d) = %s', gpsCounter, JSON.stringify(sensorData));
+                          log.verbose(selectedTruck, 'Ultrasonic onChange value (%d) = %s', gpsCounter, JSON.stringify(sensorData));
                           vd.update(sensorData);
                         } else {
                           log.error(IOTCS, "URN not registered: " + INFRAREDDISTANCEINTERRUPTSENSOR);
@@ -487,13 +489,13 @@ async.series( {
     router.post(resetURI, (req, res) => {
       res.status(200).send({
         result: "Success",
-        message: "Route reset successfully with " + req.body.length + " GPS points"
+        message: "Route reset successfully for truck " + req.body.truck + " with " + req.body.gps.length + " GPS points"
       });
       res.end();
-      console.log(req.body);
       gpsPoints = req.body.gps;
+      selectedTruck = req.body.truck;
       gpsCounter = 0;
-      log.verbose(REST, "New route received successfully with %d points", req.body.length);
+      log.verbose(REST, "New route successfully received for truck " + req.body.truck + " with %d points", req.body.gps.length);
     });
     router.post(lcdURI, (req, res) => {
       res.status(204).send();
