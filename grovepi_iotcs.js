@@ -360,7 +360,6 @@ async.series( {
     });
   },
   grovepi: (callbackMainSeries) => {
-    process.exit(2);
     log.info(GROVEPI, "Initializing GrovePi devices");
     if (board)
       callbackMainSeries(null, true);
