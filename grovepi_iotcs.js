@@ -281,7 +281,7 @@ async.series( {
           var file = truck.truckid.toUpperCase() + '.conf';
           fs.outputFileSync(file, _body.provisiondata);
           log.verbose(IOTCS, "Data file created successfully: %s", file);
-        }
+        });
       }, (err) => {
         callbackMainSeries(err);
       });
