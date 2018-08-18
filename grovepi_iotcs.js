@@ -11,7 +11,7 @@ const async = require('async')
     , http = require('http')
     , bodyParser = require('body-parser')
     , restify = require('restify')
-    , fs = require('fs')
+    , fs = require('fs-extra')
     , commandLineArgs = require('command-line-args')
     , getUsage = require('command-line-usage')
     , log = require('npmlog-ts')
@@ -111,7 +111,8 @@ dcl = dcl({debug: false});
 
 // Initializing REST server BEGIN
 const APEXURL = 'https://apex.digitalpracticespain.com'
-    , GETTRUCKS = '/ords/pdb1/wedoindustry/trucks/:demozone'
+    , GETTRUCKS = '/ords/pdb1/wedoindustry/trucks/id/:demozone'
+    , GETIOTDEVICEDATA = '/ords/pdb1/wedoindustry/iot/device/:demozone/:deviceid'
     , PORT = process.env.GPSPORT || 8888
     , READERPORT = 8886
     , readerTakePicture = '/reader/take'
@@ -254,20 +255,40 @@ async.series( {
   },
   devices: (callbackMainSeries) => {
     log.info(IOTCS, "Retrieving IoT Truck devices for demozone '%s'", options.demozone);
-    apexClient.get(GETTRUCKS.replace(':demozone', options.demozone), function(err, req, res, body) {
+    apexClient.get(GETTRUCKS.replace(':demozone', options.demozone), (err, req, res, body) => {
       if (err || res.statusCode != 200) {
         callbackMainSeries(new Error("Error retrieving truck information: " + err));
         return;
       }
       if (!body || !body.items || body.items.length == 0) {
-        callbackMainSeries(new Error("No truck information found for demozone '%s'", options.demozone));
+        callbackMainSeries(new Error("No truck information found for demozone '" + options.demozone + "'"));
         return;
       }
-      console.log(obj);
-      process.exit(2);
+      // Remove any existing .conf file
+      fs.removeSync('*.conf');
+      async.eachSeries( body.items, (truck, nextTruck) => {
+        log.verbose(IOTCS, "Retrieving provisioning data for device '%s'", truck.truckid);
+        apexClient.get(GETIOTDEVICEDATA.replace(':demozone', options.demozone).replace(':deviceid', truck.truckid), (_err, _req, _res, _body) => {
+          if (err || res.statusCode != 200) {
+            callbackMainSeries(new Error("Error retrieving truck device information: " + err));
+            return;
+          }
+          if (!_body || !_body.provisiondata) {
+            callbackMainSeries(new Error("No truck device information found for demozone '" + options.demozone + "' and ID '" + truck.truckid + "'"));
+            return;
+          }
+          // We have the device ID and the provisioning data. Create the provisioning file
+          var file = truck.truckid.toUpperCase() + '.conf';
+          fs.outputFileSync(file, _body.provisiondata);
+          log.verbose(IOTCS, "Data file created successfully: %s", file);
+        }
+      }, (err) => {
+        callbackMainSeries(err);
+      });
     });
   },
   iot: (callbackMainSeries) => {
+    process.exit(2);
     log.info(IOTCS, "Initializing IoTCS devices");
     log.info(IOTCS, "Using IoTCS JavaScript Libraries v" + dcl.version);
     async.eachSeries( devices, (d, callbackEachSeries) => {
