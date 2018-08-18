@@ -20,7 +20,7 @@ const async = require('async')
 
 // Initialize input arguments
 const optionDefinitions = [
-  { name: 'device', alias: 'd', type: String },
+  { name: 'demozone', alias: 'd', type: String },
   { name: 'iotcs', alias: 's', type: String },
   { name: 'verbose', alias: 'v', type: Boolean, defaultOption: false },
   { name: 'help', alias: 'h', type: Boolean }
