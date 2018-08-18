@@ -254,9 +254,14 @@ async.series( {
   },
   devices: (callbackMainSeries) => {
     log.info(IOTCS, "Retrieving IoT Truck devices for demozone '%s'", options.demozone);
-    apexClient.get(GETTRUCKS.replace(':demozone', options.demozone), function(err, req, res, obj) {
+    apexClient.get(GETTRUCKS.replace(':demozone', options.demozone), function(err, req, res, body) {
       if (err || res.statusCode != 200) {
         log.error(APEX, "Error retrieving truck information: " + err);
+        callbackMainSeries(err, false);
+        return;
+      }
+      if (!body || !body.items || body.items.length == 0) {
+        log.error(APEX, "No truck information found for demozone '%s'", options.demozone);
         callbackMainSeries(err, false);
         return;
       }
