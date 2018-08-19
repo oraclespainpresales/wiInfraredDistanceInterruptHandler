@@ -204,6 +204,7 @@ process.on('SIGINT', function() {
 
 var pre = false;
 var flag = undefined;
+var processing = false;
 
 async.series( {
   lcd: (callbackMainSeries) => {
@@ -375,7 +376,6 @@ async.series( {
             var ultrasonicSensor = new GrovePi.sensors.UltrasonicDigital(s.port);
             sensors.push({ id: s.id, port: s.port, sensors: ultrasonicSensor });
             log.verbose(GROVEPI, 'Start watch Ultrasonic Sensor %d', s.id);
-            var processing = false;
             ultrasonicSensor.on('change', function(res) {
               console.log("processing: " + processing);
               if (processing === false) {
@@ -519,7 +519,7 @@ async.series( {
               } else {
                 log.verbose(GROVEPI, 'Ignoring event');
               }
-            });
+            }).bind(processing);
             ultrasonicSensor.watch();
           });
           // LEDS
