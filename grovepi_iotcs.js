@@ -419,7 +419,7 @@ async.series( {
                             { action: "clear" },
                             { action: "color", color: [0,0,0]}
                           ];
-                          lcd.execute(action)
+                          lcd.execute(action);
                           .then(() => {
                             log.verbose(PROCESS, "Requesting picture & code");
                             readerClient.get(readerTakePicture, function(err, req, res, body) {
@@ -428,7 +428,28 @@ async.series( {
                                 return;
                               } else {
                                 log.verbose(PROCESS, "Requesting picture & code invoked with result: %j", body);
-                                n();
+                                if (body.result == "Success") {
+                                  action = [
+                                    { action: "on" },
+                                    { action: "write", color: [0,255,0], text: "Code read:\n" + body.code },
+                                    { action: "wait", time: 5000 },
+                                    { action: "clear" },
+                                    { action: "color", color: [0,0,0]}
+                                    { action: "off" }
+                                  ];
+                                } else {
+                                  action = [
+                                    { action: "on" },
+                                    { action: "write", color: [255,0,0], text: "Error:\n" + body.message },
+                                    { action: "wait", time: 5000 },
+                                    { action: "clear" },
+                                    { action: "color", color: [0,0,0]}
+                                    { action: "off" }
+                                  ];
+                                }
+                                lcd.execute(action)
+                                .then(() => { n()})
+                                .catch(() => { n("LCD request completed with errors") });
                               }
                             });
                           })
