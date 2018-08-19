@@ -379,9 +379,10 @@ async.series( {
             sensors.push({ id: s.id, port: s.port, sensors: ultrasonicSensor });
             log.verbose(GROVEPI, 'Start watch Ultrasonic Sensor %d', s.id);
             ultrasonicSensor.on('change', function(res) {
-              console.log("processing: " + self.processing);
+              console.log("processing1: " + self.processing);
               if (self.processing === false) {
                 self.processing = true;
+                console.log("processing2: " + self.processing);
                 if (res <= 5) {
                   flag = true;
                 } else {
