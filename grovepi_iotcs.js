@@ -204,9 +204,7 @@ process.on('SIGINT', function() {
 
 var pre = false;
 var flag = undefined;
-var processing = _.noop();
-var self = this;
-self.processing = false;
+var processing = false;
 
 async.series( {
   lcd: (callbackMainSeries) => {
@@ -379,8 +377,8 @@ async.series( {
             sensors.push({ id: s.id, port: s.port, sensors: ultrasonicSensor });
             log.verbose(GROVEPI, 'Start watch Ultrasonic Sensor %d', s.id);
             ultrasonicSensor.on('change', function(res) {
-              console.log("processing1: " + self.processing);
-              if (self.processing === false) {
+              console.log("processing1: " + processing);
+              if (processing === false) {
                 if (res <= 5) {
                   flag = true;
                 } else {
@@ -390,8 +388,8 @@ async.series( {
                   pre = flag;
                   if (flag == true) {
                     // Got it!!
-                    self.processing = true;
-                    console.log("processing2: " + self.processing);
+                    processing = true;
+                    console.log("processing2: " + processing);
                     var s = _.find(SENSORSCFG, { port: this.pin });
                     if (s.finishline) {
                       var truckid = _.noop();
@@ -495,8 +493,8 @@ async.series( {
                         if (err) {
                           log.error(PROCESS, err);
                         }
-                        self.processing = false;
-                        console.log("processing31: " + self.processing);
+                        processing = false;
+                        console.log("processing31: " + processing);
                       });
                     } else {
                       if ( !_.isUndefined(gpsPoints)) {
@@ -517,8 +515,8 @@ async.series( {
                       } else {
                         log.error(IOTCS, "Cannot send GPS position as truck hasn't been selected and route hasn't been set yet");
                       }
-                      self.processing = false;
-                      console.log("processing32: " + self.processing);
+                      processing = false;
+                      console.log("processing32: " + processing);
                     }
                   }
                 }
