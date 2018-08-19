@@ -463,6 +463,7 @@ async.series( {
                                     { action: "color", color: [0,0,0]},
                                     { action: "off" }
                                   ];
+                                  truckid = _.noop();
                                 }
                                 lcd.execute(action)
                                 .then(() => { n()})
@@ -485,8 +486,11 @@ async.series( {
                         },
                         cleanUp: (n) => {
                           // We clean the gpsPoints so that we avoid accidental positives after completing the demo
-                          log.verbose(PROCESS, "Cleaning up the variables to avoid accidental positives");
-                          gpsPoints = _.noop();
+                          if (truckid) { // Everything went well if truckid != undefined
+                            log.verbose(PROCESS, "Cleaning up the variables to avoid accidental positives");
+                            gpsPoints = _.noop();
+                            truckid = _.noop();
+                          }
                           n();
                         }
                       }, (err) => {
