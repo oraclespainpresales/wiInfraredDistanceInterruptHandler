@@ -74,6 +74,13 @@ if (!options.iotcs) {
   process.exit(-1);
 }
 
+// Log stuff
+const PROCESS = 'PROCESS'
+    , IOTCS   = 'IOTCS'
+    , GROVEPI = 'GROVEPI'
+    , REST    = 'REST'
+    , APEX    = 'APEX'
+;
 log.level = (options.verbose) ? 'verbose' : 'info';
 log.timestamp = true;
 
@@ -170,14 +177,6 @@ var board      = undefined
   , LEDS       = []
   , lastData   = undefined
   , timer      = undefined
-;
-
-// Misc
-const PROCESS = 'PROCESS'
-    , IOTCS   = 'IOTCS'
-    , GROVEPI = 'GROVEPI'
-    , REST    = 'REST'
-    , APEX    = 'APEX'
 ;
 
 // device class helper
