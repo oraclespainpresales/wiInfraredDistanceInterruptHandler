@@ -204,8 +204,9 @@ process.on('SIGINT', function() {
 
 var pre = false;
 var flag = undefined;
-var processing = false;
+var processing = _.noop();
 var self = this;
+self.processing = false;
 
 async.series( {
   lcd: (callbackMainSeries) => {
