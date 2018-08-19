@@ -432,14 +432,26 @@ async.series( {
                                 log.verbose(PROCESS, "Requesting picture & code invoked with result: %j", body);
                                 if (body.result == "Success") {
                                   truckid = body.code;
-                                  action = [
-                                    { action: "on" },
-                                    { action: "write", color: [0,255,0], text: "Code read:\n" + body.code },
-                                    { action: "wait", time: 5000 },
-                                    { action: "clear" },
-                                    { action: "color", color: [0,0,0]},
-                                    { action: "off" }
-                                  ];
+                                  if (truckid !== selectedTruck) {
+                                    action = [
+                                      { action: "on" },
+                                      { action: "write", color: [255,0,0], text: "Unknown code:\n" + truckid },
+                                      { action: "wait", time: 5000 },
+                                      { action: "clear" },
+                                      { action: "color", color: [0,0,0]},
+                                      { action: "off" }
+                                    ];
+                                    truckid = _.noop();
+                                  } else {
+                                    action = [
+                                      { action: "on" },
+                                      { action: "write", color: [0,255,0], text: "Code read:\n" + truckid },
+                                      { action: "wait", time: 5000 },
+                                      { action: "clear" },
+                                      { action: "color", color: [0,0,0]},
+                                      { action: "off" }
+                                    ];
+                                  }
                                 } else {
                                   action = [
                                     { action: "on" },
@@ -459,12 +471,14 @@ async.series( {
                           .catch(() => { n("LCD request completed with errors") });
                         },
                         sendAlert: (n) => {
-                          log.verbose(IOTCS, "Sending alert for truck '%s'", truckid);
-                          var d = _.find(devices, (o) => { return o.getName() == truckid });
-                          var vd = d.getIotVd(CARDM);
-                          var alert = vd.createAlert(DESTINATIONALERTURN);
-                          alert.fields.Truckid = truckid;
-                          alert.raise();
+                          if (truckid) {
+                            log.verbose(IOTCS, "Sending alert for truck '%s'", truckid);
+                            var d = _.find(devices, (o) => { return o.getName() == truckid });
+                            var vd = d.getIotVd(CARDM);
+                            var alert = vd.createAlert(DESTINATIONALERTURN);
+                            alert.fields.Truckid = truckid;
+                            alert.raise();
+                          }
                           n();
                         }
                       }, (err) => {
