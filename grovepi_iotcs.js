@@ -381,8 +381,6 @@ async.series( {
             ultrasonicSensor.on('change', function(res) {
               console.log("processing1: " + self.processing);
               if (self.processing === false) {
-                self.processing = true;
-                console.log("processing2: " + self.processing);
                 if (res <= 5) {
                   flag = true;
                 } else {
@@ -392,6 +390,8 @@ async.series( {
                   pre = flag;
                   if (flag == true) {
                     // Got it!!
+                    self.processing = true;
+                    console.log("processing2: " + self.processing);
                     var s = _.find(SENSORSCFG, { port: this.pin });
                     if (s.finishline) {
                       var truckid = _.noop();
@@ -495,6 +495,8 @@ async.series( {
                         if (err) {
                           log.error(PROCESS, err);
                         }
+                        self.processing = false;
+                        console.log("processing31: " + self.processing);
                       });
                     } else {
                       if ( !_.isUndefined(gpsPoints)) {
@@ -515,11 +517,11 @@ async.series( {
                       } else {
                         log.error(IOTCS, "Cannot send GPS position as truck hasn't been selected and route hasn't been set yet");
                       }
+                      self.processing = false;
+                      console.log("processing32: " + self.processing);
                     }
                   }
                 }
-                self.processing = false;
-                console.log("processing3: " + self.processing);
               } else {
                 log.verbose(GROVEPI, 'Ignoring event');
               }
