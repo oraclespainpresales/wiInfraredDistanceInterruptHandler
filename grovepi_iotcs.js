@@ -107,7 +107,7 @@ dcl = dcl({debug: false});
 
 // Get demozone Data
 var DEMOZONE = DEFAULTDEMOZONE;
-fs.readFile(DEMOZONEFILE,'utf8').then((data)=>{DEMOZONE=data}).catch(() => {});
+fs.readFile(DEMOZONEFILE,'utf8').then((data)=>{DEMOZONE=data.trim()}).catch(() => {});
 log.info(PROCESS, 'Working for demozone: %s', DEMOZONE);
 
 // Initializing REST server BEGIN
