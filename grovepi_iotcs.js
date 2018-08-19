@@ -87,6 +87,7 @@ log.timestamp = true;
 // IoTCS stuff
 const GROVEPIDEV = "GrovePi+"
     , INFRAREDDISTANCEINTERRUPTSENSORDM = "urn:com:oracle:iot:device:grovepi:infrareddistanceinterrupt"
+    , DESTINATIONALERTURN = "urn:oracle:iot:device:model:destination:arrived"
     , CARDM = "urn:oracle:iot:device:model:car"
     , storePassword = 'Welcome1'
     , DEMOZONEFILE  = '/demozone.dat'
@@ -389,6 +390,7 @@ async.series( {
                     // Got it!!
                     var s = _.find(SENSORSCFG, { port: this.pin });
                     if (s.finishline) {
+                      var truckid = _.noop();
                       log.verbose(GROVEPI, 'Reached finish line!!');
                       async.series( {
                         check: (n) => {
@@ -429,6 +431,7 @@ async.series( {
                               } else {
                                 log.verbose(PROCESS, "Requesting picture & code invoked with result: %j", body);
                                 if (body.result == "Success") {
+                                  truckid = body.code;
                                   action = [
                                     { action: "on" },
                                     { action: "write", color: [0,255,0], text: "Code read:\n" + body.code },
@@ -440,7 +443,7 @@ async.series( {
                                 } else {
                                   action = [
                                     { action: "on" },
-                                    { action: "write", color: [255,0,0], text: "Error:\n" + body.message },
+                                    { action: "write", color: [255,0,0], text: body.message },
                                     { action: "wait", time: 5000 },
                                     { action: "clear" },
                                     { action: "color", color: [0,0,0]},
@@ -454,6 +457,15 @@ async.series( {
                             });
                           })
                           .catch(() => { n("LCD request completed with errors") });
+                        },
+                        sendAlert: (n) => {
+                          log.verbose(IOTCS, "Sending alert for truck '%s'", truckid);
+                          var d = _.find(devices, (o) => { return o.getName() == truckid });
+                          var vd = d.getIotVd(CARDM);
+                          var alert = vd.createAlert(DESTINATIONALERTURN);
+                          alert.fields.Truckid = truckid;
+                          alert.raise();
+                          n();
                         }
                       }, (err) => {
                         if (err) {
