@@ -480,6 +480,12 @@ async.series( {
                             alert.raise();
                           }
                           n();
+                        },
+                        cleanUp: (n) => {
+                          // We clean the gpsPoints so that we avoid accidental positives after completing the demo
+                          log.verbose(PROCESS, "Cleaning up the variables to avoid accidental positives");
+                          gpsPoints = _.noop();
+                          n();
                         }
                       }, (err) => {
                         if (err) {
