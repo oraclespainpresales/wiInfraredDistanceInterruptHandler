@@ -434,7 +434,7 @@ async.series( {
                                     { action: "write", color: [0,255,0], text: "Code read:\n" + body.code },
                                     { action: "wait", time: 5000 },
                                     { action: "clear" },
-                                    { action: "color", color: [0,0,0]}
+                                    { action: "color", color: [0,0,0]},
                                     { action: "off" }
                                   ];
                                 } else {
@@ -443,7 +443,7 @@ async.series( {
                                     { action: "write", color: [255,0,0], text: "Error:\n" + body.message },
                                     { action: "wait", time: 5000 },
                                     { action: "clear" },
-                                    { action: "color", color: [0,0,0]}
+                                    { action: "color", color: [0,0,0]},
                                     { action: "off" }
                                   ];
                                 }
