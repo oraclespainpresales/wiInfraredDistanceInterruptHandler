@@ -205,6 +205,7 @@ process.on('SIGINT', function() {
 var pre = false;
 var flag = undefined;
 var processing = false;
+var self = this;
 
 async.series( {
   lcd: (callbackMainSeries) => {
@@ -377,9 +378,9 @@ async.series( {
             sensors.push({ id: s.id, port: s.port, sensors: ultrasonicSensor });
             log.verbose(GROVEPI, 'Start watch Ultrasonic Sensor %d', s.id);
             ultrasonicSensor.on('change', function(res) {
-              console.log("processing: " + processing);
-              if (processing === false) {
-                processing = true;
+              console.log("processing: " + self.processing);
+              if (self.processing === false) {
+                self.processing = true;
                 if (res <= 5) {
                   flag = true;
                 } else {
@@ -515,11 +516,11 @@ async.series( {
                     }
                   }
                 }
-                processing = false;
+                self.processing = false;
               } else {
                 log.verbose(GROVEPI, 'Ignoring event');
               }
-            }).bind(processing);
+            });
             ultrasonicSensor.watch();
           });
           // LEDS
