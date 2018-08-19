@@ -519,6 +519,7 @@ async.series( {
                   }
                 }
                 self.processing = false;
+                console.log("processing3: " + self.processing);
               } else {
                 log.verbose(GROVEPI, 'Ignoring event');
               }
