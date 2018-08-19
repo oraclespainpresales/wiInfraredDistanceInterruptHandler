@@ -515,6 +515,8 @@ async.series( {
                   }
                 }
                 processing = false;
+              } else {
+                log.verbose(GROVEPI, 'Ignoring event');
               }
             });
             ultrasonicSensor.watch();
