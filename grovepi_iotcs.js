@@ -21,7 +21,6 @@ const async = require('async')
 
 // Initialize input arguments
 const optionDefinitions = [
-  { name: 'demozone', alias: 'd', type: String },
   { name: 'iotcs', alias: 's', type: String },
   { name: 'verbose', alias: 'v', type: Boolean, defaultOption: false },
   { name: 'help', alias: 'h', type: Boolean }
@@ -35,13 +34,6 @@ const sections = [
   {
     header: 'Options',
     optionList: [
-      {
-        name: 'demozone',
-        typeLabel: '[underline]{demozone}',
-        alias: 'd',
-        type: String,
-        description: 'Demozone for this RPi device'
-      },
       {
         name: 'iotcs',
         typeLabel: '[underline]{server URL}',
@@ -77,11 +69,6 @@ if (options.help) {
   process.exit(0);
 }
 
-if (!options.demozone) {
-  console.log(getUsage(sections));
-  process.exit(-1);
-}
-
 if (!options.iotcs) {
   console.log(getUsage(sections));
   process.exit(-1);
@@ -95,6 +82,8 @@ const GROVEPIDEV = "GrovePi+"
     , INFRAREDDISTANCEINTERRUPTSENSORDM = "urn:com:oracle:iot:device:grovepi:infrareddistanceinterrupt"
     , CARDM = "urn:oracle:iot:device:model:car"
     , storePassword = 'Welcome1'
+    , DEMOZONEFILE  = '/demozone.dat'
+    , DEFAULTDEMOZONE = 'MADRID'
 ;
 
 var dcl = require('./device-library.node')
@@ -108,6 +97,11 @@ var dcl = require('./device-library.node')
 ;
 
 dcl = dcl({debug: false});
+
+// Get demozone Data
+var DEMOZONE = DEFAULTDEMOZONE;
+fs.readFile(DEMOZONEFILE,'utf8').then((data)=>{DEMOZONE=data).catch(() => {});
+log.info(PROCESS, 'Working for demozone: %s', DEMOZONE);
 
 // Initializing REST server BEGIN
 const APEXURL = 'https://apex.digitalpracticespain.com'
@@ -250,17 +244,17 @@ async.series( {
     });
   },
   devices: (callbackMainSeries) => {
-    log.info(IOTCS, "Retrieving IoT Truck devices for demozone '%s'", options.demozone);
-    apexClient.get(GETTRUCKS.replace(':demozone', options.demozone), (err, req, res, body) => {
+    log.info(IOTCS, "Retrieving IoT Truck devices for demozone '%s'", DEMOZONE);
+    apexClient.get(GETTRUCKS.replace(':demozone', DEMOZONE), (err, req, res, body) => {
       if (err || res.statusCode != 200) {
         callbackMainSeries(new Error("Error retrieving truck information: " + err));
         return;
       }
       if (!body || !body.items || body.items.length == 0) {
-        callbackMainSeries(new Error("No truck information found for demozone '" + options.demozone + "'"));
+        callbackMainSeries(new Error("No truck information found for demozone '" + DEMOZONE + "'"));
         return;
       }
-      log.verbose(IOTCS, "Devices registered for demozone '%s': %s",  options.demozone, _.map(body.items, 'truckid').join(', '));
+      log.verbose(IOTCS, "Devices registered for demozone '%s': %s",  DEMOZONE, _.map(body.items, 'truckid').join(', '));
       // Remove any existing .conf file
       // We keep it async as it should have finished before we're creating the new files... hopefully
       glob('*.conf', (er, files) => {
@@ -270,13 +264,13 @@ async.series( {
       });
       async.eachSeries( body.items, (truck, nextTruck) => {
         log.verbose(IOTCS, "Retrieving provisioning data for device '%s'", truck.truckid);
-        apexClient.get(GETIOTDEVICEDATA.replace(':demozone', options.demozone).replace(':deviceid', truck.truckid), (_err, _req, _res, _body) => {
+        apexClient.get(GETIOTDEVICEDATA.replace(':demozone', DEMOZONE).replace(':deviceid', truck.truckid), (_err, _req, _res, _body) => {
           if (err || res.statusCode != 200) {
             callbackMainSeries(new Error("Error retrieving truck device information: " + err));
             return;
           }
           if (!_body || !_body.provisiondata) {
-            callbackMainSeries(new Error("No truck device information found for demozone '" + options.demozone + "' and ID '" + truck.truckid + "'"));
+            callbackMainSeries(new Error("No truck device information found for demozone '" + DEMOZONE + "' and ID '" + truck.truckid + "'"));
             return;
           }
           // We have the device ID and the provisioning data. Create the provisioning file
