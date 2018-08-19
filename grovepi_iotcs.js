@@ -419,7 +419,7 @@ async.series( {
                             { action: "clear" },
                             { action: "color", color: [0,0,0]}
                           ];
-                          lcd.execute(action);
+                          lcd.execute(action)
                           .then(() => {
                             log.verbose(PROCESS, "Requesting picture & code");
                             readerClient.get(readerTakePicture, function(err, req, res, body) {
