@@ -417,14 +417,21 @@ async.series( {
                             { action: "write", raw: true, goto: [3, 1], text: "0" },
                             { action: "wait", time: 500 },
                             { action: "clear" },
-                            { action: "color", color: [0,0,0]},
-                            { action: "wait", time: 500 },
-                            { action: "color", color: [255,255,255]},
-                            { action: "wait", time: 50 },
-                            { action: "off" },
+                            { action: "color", color: [0,0,0]}
                           ];
                           lcd.execute(action)
-                          .then(() => { log.verbose(REST, "LCD request completed successfully"); n() })
+                          .then(() => {
+                            log.verbose(PROCESS, "Requesting picture & code");
+                            readerClient.get(readerTakePicture, function(err, req, res, body) {
+                              if (err) {
+                                n(new Error("Error invoking CoreReader: " + err.statusCode));
+                                return;
+                              } else {
+                                log.verbose(PROCESS, "Requesting picture & code invoked with result: %j", body);
+                                n();
+                              }
+                            });
+                          })
                           .catch(() => { n("LCD request completed with errors") });
                         }
                       }, (err) => {
