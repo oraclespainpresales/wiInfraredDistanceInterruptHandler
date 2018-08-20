@@ -525,12 +525,14 @@ async.series( {
             ultrasonicSensor.watch();
           });
           // LEDS
+/**
           log.verbose(GROVEPI, 'Initializing %d leds', LEDSCFG.length);
           _.forEach(LEDSCFG, (l) => {
             log.verbose(GROVEPI, "Setting LED with color '%s' at digital port #%d", l.color, l.port);
             var led = new GrovePi.sensors.DigitalOutput(l.port);
             LEDS.push({ color: l.color, port: l.port, device: led });
           });
+**/
         } else {
           log.error(GROVEPI, 'TEST CANNOT START')
         }
@@ -565,6 +567,7 @@ async.series( {
       .catch(() => { log.verbose(REST, "LCD request completed with errors") });
       return;
     });
+/**
     router.get(ledsURI, (req, res) => {
       // /leds/:led/:action/:duration?
       var led = req.params.led.toUpperCase();
@@ -640,6 +643,7 @@ async.series( {
       });
       res.end();
     });
+**/
     server.listen(PORT, () => {
       log.info(REST, "REST Server initialized successfully");
       callbackMainSeries(null, true);
