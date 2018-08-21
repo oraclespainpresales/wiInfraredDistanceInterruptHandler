@@ -179,7 +179,7 @@ var board      = undefined
   , lastData   = undefined
   , timer      = undefined
 ;
-const DISTANCE = 7
+const DISTANCE = 8
 ;
 
 // device class helper
