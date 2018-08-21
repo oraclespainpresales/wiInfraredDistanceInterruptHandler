@@ -179,6 +179,8 @@ var board      = undefined
   , lastData   = undefined
   , timer      = undefined
 ;
+const DISTANCE = 7
+;
 
 // device class helper
 function getModel(device, urn, callback) {
@@ -381,7 +383,7 @@ async.series( {
                 console.log("Distancia: %d, flag: %s, pre: %s", res, flag, pre);
               }
               if (processing === false) {
-                if (res <= 5) {
+                if (res <= DISTANCE) {
                   flag = true;
                 } else {
                   flag = false;
