@@ -378,7 +378,7 @@ async.series( {
             log.verbose(GROVEPI, 'Start watch Ultrasonic Sensor %d', s.id);
             ultrasonicSensor.on('change', function(res) {
               if (this.pin == 2) {
-                console.log(res);
+                console.log("Distancia: %d, flag: %s, pre: %s", res, flag, pre);
               }
               if (processing === false) {
                 if (res <= 5) {
