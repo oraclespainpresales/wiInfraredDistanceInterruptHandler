@@ -466,12 +466,12 @@ async.series( {
                                   truckid = _.noop();
                                 }
                                 lcd.execute(action)
-                                .then(() => { n(); return;})
-                                .catch(() => { n("LCD request completed with errors"); return; });
+                                .then(() => { console.log("1"); n(); return;})
+                                .catch(() => { console.log("2"); n("LCD request completed with errors"); return; });
                               }
                             });
                           })
-                          .catch(() => { n("LCD request completed with errors");return; });
+                          .catch(() => { console.log("3"); n("LCD request completed with errors");return; });
                         },
                         sendAlert: (n) => {
                           if (truckid) {
