@@ -487,6 +487,18 @@ async.series( {
                           }
                           n();
                         },
+                        resetPosition: (n) => {
+                          var sensorData = { ora_latitude: 0, ora_longitude: 0 };
+                          var d = _.find(devices, (o) => { return o.getName() == truckid });
+                          var vd = d.getIotVd(CARDM);
+                          if (vd) {
+                            log.verbose(selectedTruck, 'Ultrasonic onChange value (resetting) = %s', JSON.stringify(sensorData));
+                            vd.update(sensorData);
+                          } else {
+                            log.error(IOTCS, "URN not registered: " + INFRAREDDISTANCEINTERRUPTSENSOR);
+                          }
+                          n();
+                        },
                         cleanUp: (n) => {
                           // We clean the gpsPoints so that we avoid accidental positives after completing the demo
                           if (truckid) { // Everything went well if truckid != undefined
