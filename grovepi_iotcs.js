@@ -472,7 +472,7 @@ async.series( {
                                 .catch(() => { console.log("2"); n("LCD request completed with errors"); return; });
 **/
                               }
-                            });
+                            }).catch(() => { n("Error taking picture");return; });
                           })
                           .catch(() => { n("LCD request completed with errors");return; });
                         },
