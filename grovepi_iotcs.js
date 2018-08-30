@@ -533,7 +533,7 @@ async.series( {
                         }
                         gpsCounter++;
                       } else {
-                        log.error(IOTCS, "Cannot send GPS position as truck hasn't been selected and route hasn't been set yet");
+                        log.error(IOTCS, "[%s] Cannot send GPS position as truck hasn't been selected and route hasn't been set yet", s.id);
                       }
                       processing = false;
                     }
