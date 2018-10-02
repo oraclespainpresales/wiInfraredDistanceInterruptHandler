@@ -137,8 +137,8 @@ var app    = express()
 // Initializing REST client BEGIN
 var apexClient = restify.createJsonClient({
   url: APEXURL,
-  connectTimeout: 5000,
-  requestTimeout: 5000,
+  connectTimeout: 10000,
+  requestTimeout: 10000,
   retry: false,
   rejectUnauthorized: false,
   headers: {
@@ -209,8 +209,8 @@ var processing = false;
 
 async.series( {
   lcd: (callbackMainSeries) => {
-//    lcd.clear();
-//    lcd.color(0, 0, 0);
+    lcd.clear();
+    lcd.color(0, 0, 0);
     callbackMainSeries(null, true);
   },
   internet: (callbackMainSeries) => {
