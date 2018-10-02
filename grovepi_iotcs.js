@@ -2,7 +2,7 @@
 
 // Module imports
 const async = require('async')
-//    , GrovePi = require('node-grovepi').GrovePi
+    , GrovePi = require('node-grovepi').GrovePi
     , LCD = require('./lcd')
     , Device = require('./device')
     , SENSORSCFG = require('./sensors.json')
@@ -87,8 +87,8 @@ log.timestamp = true;
 // IoTCS stuff
 const GROVEPIDEV = "GrovePi+"
     , DESTINATIONALERTURN = "urn:oracle:iot:device:model:destination:arrived"
-//    , CARDM = "urn:oracle:iot:device:model:car"
-    , CARDM = "urn:bot:1:wedo:tempmodel:sensor"
+    , CARDM = "urn:oracle:iot:device:model:car"
+//    , CARDM = "urn:bot:1:wedo:tempmodel:sensor"
     , storePassword = 'Welcome1'
     , DEMOZONEFILE  = '/demozone.dat'
     , DEFAULTDEMOZONE = 'MADRID'
@@ -137,8 +137,8 @@ var app    = express()
 // Initializing REST client BEGIN
 var apexClient = restify.createJsonClient({
   url: APEXURL,
-  connectTimeout: 1000,
-  requestTimeout: 1000,
+  connectTimeout: 5000,
+  requestTimeout: 5000,
   retry: false,
   rejectUnauthorized: false,
   headers: {
