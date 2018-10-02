@@ -2,7 +2,7 @@
 
 // Module imports
 const async = require('async')
-    , GrovePi = require('node-grovepi').GrovePi
+//    , GrovePi = require('node-grovepi').GrovePi
     , LCD = require('./lcd')
     , Device = require('./device')
     , SENSORSCFG = require('./sensors.json')
@@ -86,9 +86,9 @@ log.timestamp = true;
 
 // IoTCS stuff
 const GROVEPIDEV = "GrovePi+"
-    , INFRAREDDISTANCEINTERRUPTSENSORDM = "urn:com:oracle:iot:device:grovepi:infrareddistanceinterrupt"
     , DESTINATIONALERTURN = "urn:oracle:iot:device:model:destination:arrived"
-    , CARDM = "urn:oracle:iot:device:model:car"
+//    , CARDM = "urn:oracle:iot:device:model:car"
+    , CARDM = "urn:bot:1:wedo:tempmodel:sensor"
     , storePassword = 'Welcome1'
     , DEMOZONEFILE  = '/demozone.dat'
     , DEFAULTDEMOZONE = 'MADRID'
@@ -108,8 +108,7 @@ dcl = dcl({debug: false});
 
 // Get demozone Data
 var DEMOZONE = DEFAULTDEMOZONE;
-fs.readFile(DEMOZONEFILE,'utf8').then((data)=>{DEMOZONE=data.trim()}).catch(() => {});
-log.info(PROCESS, 'Working for demozone: %s', DEMOZONE);
+fs.readFile(DEMOZONEFILE,'utf8').then((data)=>{DEMOZONE=data.trim();log.info(PROCESS, 'Working for demozone: %s', DEMOZONE);}).catch(() => {});
 
 // Initializing REST server BEGIN
 const APEXURL = 'https://apex.digitalpracticespain.com'
@@ -210,8 +209,8 @@ var processing = false;
 
 async.series( {
   lcd: (callbackMainSeries) => {
-    lcd.clear();
-    lcd.color(0, 0, 0);
+//    lcd.clear();
+//    lcd.color(0, 0, 0);
     callbackMainSeries(null, true);
   },
   internet: (callbackMainSeries) => {
@@ -474,7 +473,8 @@ async.series( {
                               }
                             }).catch(() => { n("Error taking picture");return; });
                           })
-                          .catch(() => { n("LCD request completed with errors");return; });
+//                          .catch(() => { n("LCD request completed with errors");return; });
+                          .catch(() => { n();return; });
                         },
                         sendAlert: (n) => {
                           if (truckid) {

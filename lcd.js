@@ -1,5 +1,4 @@
 var method = LCD.prototype;
-
 const {
     GroveLCDRGB
 } = require('grove-lcd-rgb');
@@ -13,7 +12,7 @@ const _ = require('lodash')
     , async = require('async')
 ;
 
-const lcd = new GroveLCDRGB()
+const new GroveLCDRGB()
     , tids = { tid0: null }
 ;
 
@@ -113,7 +112,8 @@ method.execute = steps => {
         sleep(step.time).then(() => next());
       }
     }, (err) => {
-      if (err) { reject(err) } else { resolve() }
+//      if (err) { reject(err) } else { resolve() }
+      resolve();
     });
   });
 }
