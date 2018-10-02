@@ -12,7 +12,7 @@ const _ = require('lodash')
     , async = require('async')
 ;
 
-const new GroveLCDRGB()
+const lcd = new GroveLCDRGB()
     , tids = { tid0: null }
 ;
 
