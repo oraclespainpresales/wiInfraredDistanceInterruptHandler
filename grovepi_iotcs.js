@@ -148,8 +148,8 @@ var apexClient = restify.createJsonClient({
 });
 var iotClient = restify.createJsonClient({
   url: options.iotcs,
-  connectTimeout: 1000,
-  requestTimeout: 1000,
+  connectTimeout: 10000,
+  requestTimeout: 10000,
   retry: false,
   rejectUnauthorized: false,
   headers: {
