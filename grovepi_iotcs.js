@@ -467,10 +467,10 @@ async.series( {
                                 lcd.execute(action)
                                 .then(() => { n(); return;})
                               }
-                            });//.catch(() => { n("Error taking picture");return; });
+                            });// .catch(() => { n("Error taking picture");return; });
                           })
-//                          .catch(() => { n("LCD request completed with errors");return; });
-//                          .catch(() => { n();return; });
+//                           .catch(() => { n("LCD request completed with errors");return; });
+//                           .catch(() => { n();return; });
                         },
                         sendAlert: (n) => {
                           if (truckid) {
