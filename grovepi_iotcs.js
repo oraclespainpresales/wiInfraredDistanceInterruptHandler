@@ -111,7 +111,7 @@ var DEMOZONE = DEFAULTDEMOZONE;
 fs.readFile(DEMOZONEFILE,'utf8').then((data)=>{DEMOZONE=data.trim();log.info(PROCESS, 'Working for demozone: %s', DEMOZONE);}).catch(() => {});
 
 // Initializing REST server BEGIN
-const APEXURL = 'https://apex.digitalpracticespain.com'
+const APEXURL = 'https://apex.wedoteam.io'
     , GETTRUCKS = '/ords/pdb1/wedoindustry/trucks/id/:demozone'
     , GETIOTDEVICEDATA = '/ords/pdb1/wedoindustry/iot/device/:demozone/:deviceid'
     , PORT = process.env.GPSPORT || 8888
