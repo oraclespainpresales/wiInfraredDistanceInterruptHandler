@@ -378,6 +378,10 @@ async.series( {
             sensors.push({ id: s.id, port: s.port, sensors: ultrasonicSensor });
             log.verbose(GROVEPI, 'Start watch Ultrasonic Sensor %d', s.id);
             ultrasonicSensor.on('change', function(res) {
+              var s = _.find(SENSORSCFG, { port: this.pin });
+              if (s.finishline) {
+                console.log("Finish lane sensor data: " + res);
+              }
               if (processing === false) {
                 if (res <= DISTANCE) {
                   flag = true;
