@@ -371,7 +371,6 @@ async.series( {
         MQTTCONNECTTIMEOUT = data.connecttimeout;
         callbackMainSeries(null, true);
       });
-      callbackMainSeries(null, true);
     }
   },
   iot: (callbackMainSeries) => {
