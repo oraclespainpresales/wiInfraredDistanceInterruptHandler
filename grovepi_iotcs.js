@@ -102,6 +102,7 @@ const PROCESSNAME = "WEDO Industry - Distance Interrupt Handler"
     , DEMO        = 'WEDOINDUSTRY'
     , PROCESS     = 'PROCESS'
     , IOTCS       = 'IOTCS'
+    , DB          = 'DB'
     , GROVEPI     = 'GROVEPI'
     , REST        = 'REST'
     , APEX        = 'APEX'
