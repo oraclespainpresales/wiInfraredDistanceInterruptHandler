@@ -356,12 +356,12 @@ async.series( {
       log.info(DB, "Retrieving MQTT settings");
       apexClient.get(COMMONURI + MQTTSETUPURI, (err, req, res, data) => {
         if (res.statusCode === 404) {
-          next(new Error("No data found!!!"));
+          callbackMainSeries(new Error("No data found!!!"));
           return;
         }
         if (err) {
           log.error(DB,"Error from DB call: " + err.statusCode);
-          next(err);
+          callbackMainSeries(err);
           return;
         }
         MQTTBROKER = data.broker;
@@ -369,7 +369,7 @@ async.series( {
         MQTTPASSWORD = data.password;
         MQTTRECONNECTPERIOD = data.reconnectperiod;
         MQTTCONNECTTIMEOUT = data.connecttimeout;
-        next();
+        callbackMainSeries(null, true);
       });
       callbackMainSeries(null, true);
     }
@@ -483,12 +483,12 @@ async.series( {
       log.info(MQTT, "Retrieving device settings for demo '%s' and demozone '%s'", DEMO, DEMOZONE);
         apexClient.get(COMMONURI + DEVICESETUPURI.replace('{demo}', DEMO).replace('{demozone}', DEMOZONE), (err, req, res, data) => {
         if (res.statusCode === 404) {
-          next(new Error("No data found!!!"));
+          callbackMainSeries(new Error("No data found!!!"));
           return;
         }
         if (err) {
           log.error(DB,"Error from DB call: " + err.statusCode);
-          next(err);
+          callbackMainSeries(err);
           return;
         }
         _.forEach(data.items, (d) => {
@@ -502,7 +502,7 @@ async.series( {
           }
         });
         if (truckDevices.length == 0) {
-          next(new Error("No data found!!!"));
+          callbackMainSeries(new Error("No data found!!!"));
           return;
         }
         callbackMainSeries(null, true);
