@@ -11,6 +11,7 @@ const async = require('async')
     , http = require('http')
     , bodyParser = require('body-parser')
     , restify = require('restify')
+    , isOnline = require('is-online')
     , fs = require('fs-extra')
     , glob = require("glob")
     , commandLineArgs = require('command-line-args')
@@ -74,16 +75,6 @@ if (!options.iotcs) {
   process.exit(-1);
 }
 
-// Log stuff
-const PROCESS = 'PROCESS'
-    , IOTCS   = 'IOTCS'
-    , GROVEPI = 'GROVEPI'
-    , REST    = 'REST'
-    , APEX    = 'APEX'
-;
-log.level = (options.verbose) ? 'verbose' : 'info';
-log.timestamp = true;
-
 // IoTCS stuff
 const GROVEPIDEV = "GrovePi+"
     , DESTINATIONALERTURN = "urn:oracle:iot:device:model:destination:arrived"
@@ -94,7 +85,7 @@ const GROVEPIDEV = "GrovePi+"
     , DEFAULTDEMOZONE = 'MADRID'
 ;
 
-var dcl = require('./device-library.node')
+var dcl = _.noop()
   , urn = [ CARDM ]
   , sensors = []
   , devices = []
@@ -104,29 +95,69 @@ var dcl = require('./device-library.node')
   , lcd = new LCD(log);
 ;
 
-dcl = dcl({debug: false});
+// Log stuff
+const PROCESSNAME = "WEDO Industry - Distance Interrupt Handler"
+    , VERSION     = "v1.2"
+    , AUTHOR      = "Carlos Casares <carlos.casares@oracle.com>"
+    , DEMO        = 'WEDOINDUSTRY'
+    , PROCESS     = 'PROCESS'
+    , IOTCS       = 'IOTCS'
+    , GROVEPI     = 'GROVEPI'
+    , REST        = 'REST'
+    , APEX        = 'APEX'
+    , MQTT        = "MQTT"
+    , TIMEOUT     = 2000
+;
+log.level = (options.verbose) ? 'verbose' : 'info';
+log.timestamp = true;
 
 // Get demozone Data
 var DEMOZONE = DEFAULTDEMOZONE;
 fs.readFile(DEMOZONEFILE,'utf8').then((data)=>{DEMOZONE=data.trim();log.info(PROCESS, 'Working for demozone: %s', DEMOZONE);}).catch(() => {});
 
 // Initializing REST server BEGIN
-const APEXURL = 'https://apex.wedoteam.io'
-    , GETTRUCKS = '/ords/pdb1/wedoindustry/trucks/id/:demozone'
-    , GETIOTDEVICEDATA = '/ords/pdb1/wedoindustry/iot/device/:demozone/:deviceid'
-    , PORT = process.env.GPSPORT || 8888
-    , READERPORT = 8886
+const APEXURL           = 'https://apex.wedoteam.io'
+    , COMMONURI         = '/ords/pdb1/wedo/common'
+    , MQTTSETUPURI      = "/setup/mqtt"
+    , DEVICESETUPURI    = "/devices/{demo}/{demozone}"
+    , GETTRUCKS         = '/ords/pdb1/wedoindustry/trucks/id/:demozone'
+    , GETIOTDEVICEDATA  = '/ords/pdb1/wedoindustry/iot/device/:demozone/:deviceid'
+    , PORT              = process.env.GPSPORT || 8888
+    , READERPORT        = 8886
     , readerTakePicture = '/reader/take'
-    , restURI = '/'
-    , resetURI = '/gps/resetroute'
-    , ledsURI  = '/leds/:led/:action/:duration?'
-    , lcdURI   = '/lcd'
-    , RED = 'RED'
-    , GREEN = 'GREEN'
-    , ON = 'ON'
-    , OFF = 'OFF'
-    , BLINK = 'BLINK'
+    , restURI           = '/'
+    , resetURI          = '/gps/resetroute'
+    , ledsURI           = '/leds/:led/:action/:duration?'
+    , lcdURI            = '/lcd'
+    , RED               = 'RED'
+    , GREEN             = 'GREEN'
+    , ON                = 'ON'
+    , OFF               = 'OFF'
+    , BLINK             = 'BLINK'
 ;
+
+// MQTT related stuff
+const ENABLEMQTTFILE = '/home/pi/temp/USEMQTT'
+;
+
+const useMQTT = fs.existsSync(ENABLEMQTTFILE);
+
+if (useMQTT) {
+  var mqtt         = require('mqtt')
+    , mqttClient   = _.noop()
+    , mqttTopic    = _.noop()
+    , truckDevices = []
+    , MQTTBROKER
+    , MQTTUSERNAME
+    , MQTTPASSWORD
+    , MQTTRECONNECTPERIOD
+    , MQTTCONNECTTIMEOUT
+  ;
+} else {
+  dcl = require('./device-library.node')
+  dcl = dcl({debug: false});
+}
+// MQTT stuff end
 
 var app    = express()
   , router = express.Router()
@@ -208,152 +239,276 @@ var flag = undefined;
 var processing = false;
 
 async.series( {
+  splash: (callbackMainSeries) => {
+    log.info(PROCESS, "%s - %s", PROCESSNAME, VERSION);
+    log.info(PROCESS, "Author - %s", AUTHOR);
+    callbackMainSeries(null, true);
+  },
+  mqttMode:  (callbackMainSeries) => {
+    log.info(MQTT, "MQTT enabled mode: " + useMQTT);
+    callbackMainSeries(null, true);
+  },
   lcd: (callbackMainSeries) => {
     lcd.clear();
     lcd.color(0, 0, 0);
     callbackMainSeries(null, true);
   },
   internet: (callbackMainSeries) => {
-    log.info(PROCESS, "Checking for Internet & IoTCS server availability...");
-    var URI = "/iot/api/v1/private/server";
-    var retries = 0;
-    async.retry({
-      times: 99999999999,
-      interval: 2000
-    }, (cb, results) => {
-      retries++;
-      log.verbose(PROCESS, "Trying to reach server %s (attempt %d)", options.iotcs, retries);
-      iotClient.get(URI, function(err, req, res, obj) {
-        if (err) {
-          if (err.statusCode === 401 || err.statusCode === 404) {
-            cb(null, "OK");
-          } else {
-            cb(err.message);
-          }
-        } else {
-          cb(null, "OK");
-        }
-      });
-    }, (err, result) => {
-      if (!result) {
-        // Server not available. Abort whole process
-        log.error(PROCESS, "Server not available after %d attempts. Aborting process!", retries);
-        process.exit(2);
-      }
-      log.info(PROCESS, "Server %s seems up & running...", options.iotcs);
-      callbackMainSeries(null, true);
-    });
-  },
-  devices: (callbackMainSeries) => {
-    log.info(IOTCS, "Retrieving IoT Truck devices for demozone '%s'", DEMOZONE);
-    apexClient.get(GETTRUCKS.replace(':demozone', DEMOZONE), (err, req, res, body) => {
-      if (err || res.statusCode != 200) {
-        callbackMainSeries(new Error("Error retrieving truck information: " + err));
-        return;
-      }
-      if (!body || !body.items || body.items.length == 0) {
-        callbackMainSeries(new Error("No truck information found for demozone '" + DEMOZONE + "'"));
-        return;
-      }
-      log.verbose(IOTCS, "Devices registered for demozone '%s': %s",  DEMOZONE, _.map(body.items, 'truckid').join(', '));
-      // Remove any existing .conf file
-      // We keep it async as it should have finished before we're creating the new files... hopefully
-      glob('*.conf', (er, files) => {
-        _.forEach(files, (f) => {
-          fs.removeSync(f);
-        });
-      });
-      async.eachSeries( body.items, (truck, nextTruck) => {
-        log.verbose(IOTCS, "Retrieving provisioning data for device '%s'", truck.truckid);
-        apexClient.get(GETIOTDEVICEDATA.replace(':demozone', DEMOZONE).replace(':deviceid', truck.truckid), (_err, _req, _res, _body) => {
-          if (err || res.statusCode != 200) {
-            callbackMainSeries(new Error("Error retrieving truck device information: " + err));
-            return;
-          }
-          if (!_body || !_body.provisiondata) {
-            callbackMainSeries(new Error("No truck device information found for demozone '" + DEMOZONE + "' and ID '" + truck.truckid + "'"));
-            return;
-          }
-          // We have the device ID and the provisioning data. Create the provisioning file
-          var file = truck.truckid.toUpperCase() + '.conf';
-          fs.outputFileSync(file, _body.provisiondata);
-          // Create and init Device object and push it to the array
-          var device = new Device(truck.truckid.toUpperCase());
-          device.setStoreFile(truck.truckid.toUpperCase() + '.conf', storePassword);
-          device.setUrn(urn);
-          devices.push(device);
-          log.verbose(IOTCS, "Data file created successfully: %s", file);
-          nextTruck();
-        });
-      }, (err) => {
-        callbackMainSeries(err);
-      });
-    });
-  },
-  iot: (callbackMainSeries) => {
-    log.info(IOTCS, "Initializing IoTCS device(s)");
-    log.info(IOTCS, "Using IoTCS JavaScript Libraries v" + dcl.version);
-    async.eachSeries( devices, (d, callbackEachSeries) => {
-      async.series( [
-        (callbackSeries) => {
-          // Initialize Device
-          log.info(IOTCS, "Initializing IoT device '" + d.getName() + "'");
-          d.setIotDcd(new dcl.device.DirectlyConnectedDevice(d.getIotStoreFile(), d.getIotStorePassword()));
-          callbackSeries(null);
-        },
-        (callbackSeries) => {
-          // Check if already activated. If not, activate it
-          if (!d.getIotDcd().isActivated()) {
-            log.verbose(IOTCS, "Activating IoT device '" + d.getName() + "'");
-            d.getIotDcd().activate(d.getUrn(), function (device, error) {
-              if (error) {
-                log.error(IOTCS, "Error in activating '" + d.getName() + "' device (" + d.getUrn() + "). Error: " + error.message);
-                callbackSeries(error);
-              }
-              d.setIotDcd(device);
-              if (!d.getIotDcd().isActivated()) {
-                log.error(IOTCS, "Device '" + d.getName() + "' successfully activated, but not marked as Active (?). Aborting.");
-                callbackSeries("ERROR: Successfully activated but not marked as Active");
-              }
-              callbackSeries(null);
-            });
-          } else {
-            log.verbose(IOTCS, "'" + d.getName() + "' device is already activated");
-            callbackSeries(null);
-          }
-        },
-        (callbackSeries) => {
-          // When here, the device should be activated. Get device models, one per URN registered
-          async.eachSeries(d.getUrn(), function(urn, callbackEachSeriesUrn) {
-            getModel(d.getIotDcd(), urn, (function (error, model) {
-              if (error !== null) {
-                log.error(IOTCS, "Error in retrieving '" + urn + "' model. Error: " + error.message);
-                callbackEachSeriesUrn(error);
-              } else {
-                d.setIotVd(urn, model, d.getIotDcd().createVirtualDevice(d.getIotDcd().getEndpointId(), model));
-                log.verbose(IOTCS, "'" + urn + "' intialized successfully");
-              }
-              callbackEachSeriesUrn(null);
-            }).bind(this));
-          }, (err) => {
-            if (err) {
-              callbackSeries(err);
-            } else {
-              callbackSeries(null, true);
-            }
-          });
-        }
-      ], (err, results) => {
-        callbackEachSeries(err);
-      });
-    }, (err) => {
-      if (err) {
-        callbackMainSeries(err);
-      } else {
-        log.info(IOTCS, "IoTCS device(s) initialized successfully");
+    log.info(PROCESS, "Checking for Internet availability...");
+    // Check for internet connectivity; and wait forever if neccessary until it's available
+    var internet = false;
+    async.whilst(
+      function() { return !internet },
+      function(c) {
+        log.info(PROCESS, "Waiting for internet availability...");
+        isOnline({timeout: TIMEOUT}).then(online => { internet = online; c(null, online) });
+      },
+      function(err, result) {
+        log.info(PROCESS, "Internet seems to be available...");
         callbackMainSeries(null, true);
       }
-    });
+    );
+  },
+  iotavailability: (callbackMainSeries) => {
+    if (!useMQTT) {
+      log.info(PROCESS, "Checking for IoTCS server availability...");
+      var URI = "/iot/api/v1/private/server";
+      var retries = 0;
+      async.retry({
+        times: 99999999999,
+        interval: 2000
+      }, (cb, results) => {
+        retries++;
+        log.verbose(PROCESS, "Trying to reach server %s (attempt %d)", options.iotcs, retries);
+        iotClient.get(URI, function(err, req, res, obj) {
+          if (err) {
+            if (err.statusCode === 401 || err.statusCode === 404) {
+              cb(null, "OK");
+            } else {
+              cb(err.message);
+            }
+          } else {
+            cb(null, "OK");
+          }
+        });
+      }, (err, result) => {
+        if (!result) {
+          // Server not available. Abort whole process
+          log.error(PROCESS, "Server not available after %d attempts. Aborting process!", retries);
+          process.exit(2);
+        }
+        log.info(PROCESS, "Server %s seems up & running...", options.iotcs);
+        callbackMainSeries(null, true);
+      });
+    } else {
+      callbackMainSeries(null, true);
+    }
+  },
+  devices: (callbackMainSeries) => {
+    if (!useMQTT) {
+      log.info(IOTCS, "Retrieving IoT Truck devices for demozone '%s'", DEMOZONE);
+      apexClient.get(GETTRUCKS.replace(':demozone', DEMOZONE), (err, req, res, body) => {
+        if (err || res.statusCode != 200) {
+          callbackMainSeries(new Error("Error retrieving truck information: " + err));
+          return;
+        }
+        if (!body || !body.items || body.items.length == 0) {
+          callbackMainSeries(new Error("No truck information found for demozone '" + DEMOZONE + "'"));
+          return;
+        }
+        log.verbose(IOTCS, "Devices registered for demozone '%s': %s",  DEMOZONE, _.map(body.items, 'truckid').join(', '));
+        // Remove any existing .conf file
+        // We keep it async as it should have finished before we're creating the new files... hopefully
+        glob('*.conf', (er, files) => {
+          _.forEach(files, (f) => {
+            fs.removeSync(f);
+          });
+        });
+        async.eachSeries( body.items, (truck, nextTruck) => {
+          log.verbose(IOTCS, "Retrieving provisioning data for device '%s'", truck.truckid);
+          apexClient.get(GETIOTDEVICEDATA.replace(':demozone', DEMOZONE).replace(':deviceid', truck.truckid), (_err, _req, _res, _body) => {
+            if (err || res.statusCode != 200) {
+              callbackMainSeries(new Error("Error retrieving truck device information: " + err));
+              return;
+            }
+            if (!_body || !_body.provisiondata) {
+              callbackMainSeries(new Error("No truck device information found for demozone '" + DEMOZONE + "' and ID '" + truck.truckid + "'"));
+              return;
+            }
+            // We have the device ID and the provisioning data. Create the provisioning file
+            var file = truck.truckid.toUpperCase() + '.conf';
+            fs.outputFileSync(file, _body.provisiondata);
+            // Create and init Device object and push it to the array
+            var device = new Device(truck.truckid.toUpperCase());
+            device.setStoreFile(truck.truckid.toUpperCase() + '.conf', storePassword);
+            device.setUrn(urn);
+            devices.push(device);
+            log.verbose(IOTCS, "Data file created successfully: %s", file);
+            nextTruck();
+          });
+        }, (err) => {
+          callbackMainSeries(err);
+        });
+      });
+    } else {
+      // Retrieve MQTT settings from DB
+      log.info(DB, "Retrieving MQTT settings");
+      apexClient.get(COMMONURI + MQTTSETUPURI, (err, req, res, data) => {
+        if (res.statusCode === 404) {
+          next(new Error("No data found!!!"));
+          return;
+        }
+        if (err) {
+          log.error(DB,"Error from DB call: " + err.statusCode);
+          next(err);
+          return;
+        }
+        MQTTBROKER = data.broker;
+        MQTTUSERNAME = data.username;
+        MQTTPASSWORD = data.password;
+        MQTTRECONNECTPERIOD = data.reconnectperiod;
+        MQTTCONNECTTIMEOUT = data.connecttimeout;
+        next();
+      });
+      callbackMainSeries(null, true);
+    }
+  },
+  iot: (callbackMainSeries) => {
+    if (!useMQTT) {
+      log.info(IOTCS, "Initializing IoTCS device(s)");
+      log.info(IOTCS, "Using IoTCS JavaScript Libraries v" + dcl.version);
+      async.eachSeries( devices, (d, callbackEachSeries) => {
+        async.series( [
+          (callbackSeries) => {
+            // Initialize Device
+            log.info(IOTCS, "Initializing IoT device '" + d.getName() + "'");
+            d.setIotDcd(new dcl.device.DirectlyConnectedDevice(d.getIotStoreFile(), d.getIotStorePassword()));
+            callbackSeries(null);
+          },
+          (callbackSeries) => {
+            // Check if already activated. If not, activate it
+            if (!d.getIotDcd().isActivated()) {
+              log.verbose(IOTCS, "Activating IoT device '" + d.getName() + "'");
+              d.getIotDcd().activate(d.getUrn(), function (device, error) {
+                if (error) {
+                  log.error(IOTCS, "Error in activating '" + d.getName() + "' device (" + d.getUrn() + "). Error: " + error.message);
+                  callbackSeries(error);
+                }
+                d.setIotDcd(device);
+                if (!d.getIotDcd().isActivated()) {
+                  log.error(IOTCS, "Device '" + d.getName() + "' successfully activated, but not marked as Active (?). Aborting.");
+                  callbackSeries("ERROR: Successfully activated but not marked as Active");
+                }
+                callbackSeries(null);
+              });
+            } else {
+              log.verbose(IOTCS, "'" + d.getName() + "' device is already activated");
+              callbackSeries(null);
+            }
+          },
+          (callbackSeries) => {
+            // When here, the device should be activated. Get device models, one per URN registered
+            async.eachSeries(d.getUrn(), function(urn, callbackEachSeriesUrn) {
+              getModel(d.getIotDcd(), urn, (function (error, model) {
+                if (error !== null) {
+                  log.error(IOTCS, "Error in retrieving '" + urn + "' model. Error: " + error.message);
+                  callbackEachSeriesUrn(error);
+                } else {
+                  d.setIotVd(urn, model, d.getIotDcd().createVirtualDevice(d.getIotDcd().getEndpointId(), model));
+                  log.verbose(IOTCS, "'" + urn + "' intialized successfully");
+                }
+                callbackEachSeriesUrn(null);
+              }).bind(this));
+            }, (err) => {
+              if (err) {
+                callbackSeries(err);
+              } else {
+                callbackSeries(null, true);
+              }
+            });
+          }
+        ], (err, results) => {
+          callbackEachSeries(err);
+        });
+      }, (err) => {
+        if (err) {
+          callbackMainSeries(err);
+        } else {
+          log.info(IOTCS, "IoTCS device(s) initialized successfully");
+          callbackMainSeries(null, true);
+        }
+      });
+    } else {
+      callbackMainSeries(null, true);
+    }
+  },
+  mqtt: (callbackMainSeries) => {
+    if (useMQTT) {
+      // Initialize mqtt
+      log.info(MQTT, "Connecting to MQTT broker at %s", MQTTBROKER);
+      mqttClient  = mqtt.connect(MQTTBROKER, { username: MQTTUSERNAME, password: MQTTPASSWORD, reconnectPeriod: MQTTRECONNECTPERIOD, connectTimeout: MQTTCONNECTTIMEOUT });
+      mqttClient.connected = false;
+
+      // Common event handlers
+      mqttClient.on('connect', () => {
+        log.info(MQTT, "Successfully connected to MQTT broker at %s", MQTTBROKER);
+        mqttClient.connected = true;
+      });
+
+      mqttClient.on('error', err => {
+        log.error(MQTT, "Error: ", err);
+      });
+
+      mqttClient.on('reconnect', () => {
+        log.verbose(MQTT, "Client trying to reconnect...");
+      });
+
+      mqttClient.on('offline', () => {
+        mqttClient.connected = false;
+        log.warn(MQTT, "Client went offline!");
+      });
+
+      mqttClient.on('end', () => {
+        mqttClient.connected = false;
+        log.info(MQTT, "Client ended");
+      });
+      callbackMainSeries(null, true);
+    } else {
+      callbackMainSeries(null, true);
+    }
+  },
+  mqttDevices: (callbackMainSeries) => {
+    if (useMQTT) {
+      log.info(MQTT, "Retrieving device settings for demo '%s' and demozone '%s'", DEMO, DEMOZONE);
+        apexClient.get(COMMONURI + DEVICESETUPURI.replace('{demo}', DEMO).replace('{demozone}', DEMOZONE), (err, req, res, data) => {
+        if (res.statusCode === 404) {
+          next(new Error("No data found!!!"));
+          return;
+        }
+        if (err) {
+          log.error(DB,"Error from DB call: " + err.statusCode);
+          next(err);
+          return;
+        }
+        _.forEach(data.items, (d) => {
+          if (d.devicename.startsWith('ANKI')) {
+            truckDevices.push({
+              name: d.devicename,
+              deviceid: d.deviceid,
+              urn: JSON.parse(d.urns)[0],
+              mqtttopic: d.mqtttopic
+            });
+          }
+        });
+        if (truckDevices.length == 0) {
+          next(new Error("No data found!!!"));
+          return;
+        }
+        callbackMainSeries(null, true);
+      });
+    } else {
+      callbackMainSeries(null, true);
+    }
   },
   grovepi: (callbackMainSeries) => {
     log.info(GROVEPI, "Initializing GrovePi devices");
@@ -519,13 +674,31 @@ async.series( {
                         }
                         var coordinates = gpsPoints[gpsCounter];
                         var sensorData = { ora_latitude: coordinates.lat, ora_longitude: coordinates.lon };
-                        var d = _.find(devices, (o) => { return o.getName() == selectedTruck });
-                        var vd = d.getIotVd(CARDM);
-                        if (vd) {
-                          log.verbose(selectedTruck, 'Ultrasonic onChange value (%d) = %s', gpsCounter, JSON.stringify(sensorData));
-                          vd.update(sensorData);
+                        if (!useMQTT) {
+                          var d = _.find(devices, (o) => { return o.getName() == selectedTruck });
+                          var vd = d.getIotVd(CARDM);
+                          if (vd) {
+                            log.verbose(selectedTruck, 'Ultrasonic onChange value (%d) = %s', gpsCounter, JSON.stringify(sensorData));
+                            vd.update(sensorData);
+                          } else {
+                            log.error(IOTCS, "URN not registered: " + INFRAREDDISTANCEINTERRUPTSENSOR);
+                          }
                         } else {
-                          log.error(IOTCS, "URN not registered: " + INFRAREDDISTANCEINTERRUPTSENSOR);
+                          // Send through MQTT
+                          // currentTruckId contains MADX52
+                          let d = _.find(truckDevices, { name: 'ANKI' + selectedTruck });
+                          if (!d) {
+                            log.error(MQTT, "Current truck with id '%s' not found in MQTT settings!", selectedTruck);
+                          } else {
+                            let mqttTopic =   d.mqtttopic + '/' + d.deviceid;
+                            let body = {
+                              type: "data",
+                              urn: d.urn,
+                              payload: sensorData
+                            }
+                            log.info(MQTT, "Publishing to topic '%s': %j", mqttTopic, body);
+                            mqttClient.publish(mqttTopic, JSON.stringify(body));
+                          }
                         }
                         gpsCounter++;
                       } else {

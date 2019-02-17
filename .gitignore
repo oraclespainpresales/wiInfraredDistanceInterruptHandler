@@ -1,2 +1,4 @@
 node_modules
 device-library.node.js
+package-lock.json
+.DS*

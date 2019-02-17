@@ -25,7 +25,9 @@
     "fs-extra": "^7.0.0",
     "glob": "^7.1.2",
     "grove-lcd-rgb": "^0.1.0",
+    "is-online": "^8.0.0",
     "lodash": "^4.17.10",
+    "mqtt": "^2.18.8",
     "node-grovepi": "^2.1.1",
     "npmlog-ts": "0.0.1",
     "restify": "^4.3.0"
