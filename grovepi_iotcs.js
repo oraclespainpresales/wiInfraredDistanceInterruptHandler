@@ -608,10 +608,20 @@ async.series( {
                                       { action: "off" }
                                     ];
                                   }
-                                } else {
+                                } else if (body.result == "Failure") {
                                   action = [
                                     { action: "on" },
                                     { action: "write", color: [255,0,0], text: body.message },
+                                    { action: "wait", time: 5000 },
+                                    { action: "clear" },
+                                    { action: "color", color: [0,0,0]},
+                                    { action: "off" }
+                                  ];
+                                  truckid = _.noop();
+                                } else {
+                                  action = [
+                                    { action: "on" },
+                                    { action: "write", color: [255,0,255], text: body.message },
                                     { action: "wait", time: 5000 },
                                     { action: "clear" },
                                     { action: "color", color: [0,0,0]},
