@@ -652,11 +652,12 @@ async.series( {
                                 log.error(MQTT, "Current truck with id '%s' not found in MQTT settings!", selectedTruck);
                               } else {
                                 let mqttTopic =   d.mqtttopic + '/' + d.deviceid;
+                                let alertData = { Truckid: truckid };
                                 let body = {
                                   type: "alert",
 //                                  urn: d.urn,
                                   urn: DESTINATIONALERTURN,
-                                  payload: sensorData
+                                  payload: alertData
                                 }
                                 log.info(MQTT, "Publishing to topic '%s': %j", mqttTopic, body);
                                 mqttClient.publish(mqttTopic, JSON.stringify(body));
