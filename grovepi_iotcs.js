@@ -640,24 +640,57 @@ async.series( {
                         sendAlert: (n) => {
                           if (truckid) {
                             log.verbose(IOTCS, "Sending alert for truck '%s'", truckid);
-                            var d = _.find(devices, (o) => { return o.getName() == truckid });
-                            var vd = d.getIotVd(CARDM);
-                            var alert = vd.createAlert(DESTINATIONALERTURN);
-                            alert.fields.Truckid = truckid;
-                            alert.raise();
+                            if (!useMQTT) {
+                              var d = _.find(devices, (o) => { return o.getName() == truckid });
+                              var vd = d.getIotVd(CARDM);
+                              var alert = vd.createAlert(DESTINATIONALERTURN);
+                              alert.fields.Truckid = truckid;
+                              alert.raise();
+                            } else {
+                              let d = _.find(truckDevices, { name: 'ANKI' + selectedTruck });
+                              if (!d) {
+                                log.error(MQTT, "Current truck with id '%s' not found in MQTT settings!", selectedTruck);
+                              } else {
+                                let mqttTopic =   d.mqtttopic + '/' + d.deviceid;
+                                let body = {
+                                  type: "alert",
+//                                  urn: d.urn,
+                                  urn: DESTINATIONALERTURN,
+                                  payload: sensorData
+                                }
+                                log.info(MQTT, "Publishing to topic '%s': %j", mqttTopic, body);
+                                mqttClient.publish(mqttTopic, JSON.stringify(body));
+                              }
+                            }
                           }
                           n();
                         },
                         resetPosition: (n) => {
                           if (truckid) {
                             var sensorData = { ora_latitude: 0, ora_longitude: 0 };
-                            var d = _.find(devices, (o) => { return o.getName() == truckid });
-                            var vd = d.getIotVd(CARDM);
-                            if (vd) {
-                              log.verbose(selectedTruck, 'Ultrasonic onChange value (resetting) = %s', JSON.stringify(sensorData));
-                              vd.update(sensorData);
+                            if (!useMQTT) {
+                              var d = _.find(devices, (o) => { return o.getName() == truckid });
+                              var vd = d.getIotVd(CARDM);
+                              if (vd) {
+                                log.verbose(selectedTruck, 'Ultrasonic onChange value (resetting) = %s', JSON.stringify(sensorData));
+                                vd.update(sensorData);
+                              } else {
+                                log.error(IOTCS, "URN not registered: " + INFRAREDDISTANCEINTERRUPTSENSOR);
+                              }
                             } else {
-                              log.error(IOTCS, "URN not registered: " + INFRAREDDISTANCEINTERRUPTSENSOR);
+                              let d = _.find(truckDevices, { name: 'ANKI' + selectedTruck });
+                              if (!d) {
+                                log.error(MQTT, "Current truck with id '%s' not found in MQTT settings!", selectedTruck);
+                              } else {
+                                let mqttTopic =   d.mqtttopic + '/' + d.deviceid;
+                                let body = {
+                                  type: "data",
+                                  urn: d.urn,
+                                  payload: sensorData
+                                }
+                                log.info(MQTT, "Publishing to topic '%s': %j", mqttTopic, body);
+                                mqttClient.publish(mqttTopic, JSON.stringify(body));
+                              }
                             }
                           }
                           n();
