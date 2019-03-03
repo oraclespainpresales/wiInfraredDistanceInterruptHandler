@@ -3,7 +3,7 @@
 // Module imports
 const async = require('async')
     , GrovePi = require('node-grovepi').GrovePi
-//    , LCD = require('./lcd')
+    , LCD = require('./lcd')
     , Device = require('./device')
     , SENSORSCFG = require('./sensors.json')
     , LEDSCFG = require('./leds.json')
@@ -92,7 +92,7 @@ var dcl = _.noop()
   , selectedTruck = _.noop()
   , gpsPoints = _.noop()
   , gpsCounter = 0
-//  , lcd = new LCD(log)
+  , lcd = new LCD(log)
 ;
 
 // Log stuff
@@ -247,8 +247,8 @@ async.series( {
     callbackMainSeries(null, true);
   },
   lcd: (callbackMainSeries) => {
-//    lcd.clear();
-//    lcd.color(0, 0, 0);
+    lcd.clear();
+    lcd.color(0, 0, 0);
     callbackMainSeries(null, true);
   },
   internet: (callbackMainSeries) => {
