@@ -163,9 +163,6 @@ if (useMQTT) {
     , MQTTRECONNECTPERIOD
     , MQTTCONNECTTIMEOUT
   ;
-} else {
-  dcl = require('./device-library.node')
-  dcl = dcl({debug: false});
 }
 // MQTT stuff end
 
@@ -386,6 +383,8 @@ async.series( {
   },
   iot: (callbackMainSeries) => {
     if (!useMQTT) {
+      dcl = require('./device-library.node')
+      dcl = dcl({debug: false});
       log.info(IOTCS, "Initializing IoTCS device(s)");
       log.info(IOTCS, "Using IoTCS JavaScript Libraries v" + dcl.version);
       async.eachSeries( devices, (d, callbackEachSeries) => {
