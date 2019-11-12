@@ -3,7 +3,6 @@
 // Module imports
 const async = require('async')
     , GrovePi = require('node-grovepi').GrovePi
-    , LCD = require('./lcd')
     , Device = require('./device')
     , SENSORSCFG = require('./sensors.json')
     , LEDSCFG = require('./leds.json')
@@ -92,7 +91,6 @@ var dcl = _.noop()
   , selectedTruck = _.noop()
   , gpsPoints = _.noop()
   , gpsCounter = 0
-  , lcd = new LCD(log);
 ;
 
 // Log stuff
@@ -111,6 +109,17 @@ const PROCESSNAME = "WEDO Industry - Distance Interrupt Handler"
 ;
 log.level = (options.verbose) ? 'verbose' : 'info';
 log.timestamp = true;
+
+var LCD = undefined;
+var lcd = undefined;
+
+try {
+  LCD = require('./lcd');
+  lcd = new LCD(log);
+} catch(e) {
+  log.error(PROCESS, "Error creating LCD object. Disabling it.");
+  lcd = undefined;
+}
 
 // Get demozone Data
 var DEMOZONE = DEFAULTDEMOZONE;
@@ -250,8 +259,10 @@ async.series( {
     callbackMainSeries(null, true);
   },
   lcd: (callbackMainSeries) => {
-    lcd.clear();
-    lcd.color(0, 0, 0);
+    if (lcd) {
+      lcd.clear();
+      lcd.color(0, 0, 0);
+    }
     callbackMainSeries(null, true);
   },
   internet: (callbackMainSeries) => {
@@ -567,31 +578,52 @@ async.series( {
                           });
                         },
                         getCode: (n) => {
-                          var action = [
-                            { action: "on" },
-                            { action: "color", color: [255,255,255]},
-                            { action: "write", text: "Taking picture\nin 5 sec" },
-                            { action: "loop", param: { loops: 5, interval: 1000, reversed: true, action: "write", goto: [3, 1], raw: true, text: "%d" } },
-                            { action: "write", raw: true, goto: [3, 1], text: "0" },
-                            { action: "wait", time: 500 },
-                            { action: "clear" },
-                            { action: "color", color: [0,0,0]}
-                          ];
-                          lcd.execute(action)
-                          .then(() => {
-                            log.verbose(PROCESS, "Requesting picture & code");
-                            readerClient.get(readerTakePicture, function(err, req, res, body) {
-                              if (err) {
-                                n(new Error("Error invoking CoreReader: " + err.statusCode));
-                                return;
-                              } else {
-                                log.verbose(PROCESS, "Requesting picture & code invoked with result: %j", body);
-                                if (body.result == "Success") {
-                                  truckid = body.code;
-                                  if (truckid !== selectedTruck) {
+                          if (lcd) {
+                            var action = [
+                              { action: "on" },
+                              { action: "color", color: [255,255,255]},
+                              { action: "write", text: "Taking picture\nin 5 sec" },
+                              { action: "loop", param: { loops: 5, interval: 1000, reversed: true, action: "write", goto: [3, 1], raw: true, text: "%d" } },
+                              { action: "write", raw: true, goto: [3, 1], text: "0" },
+                              { action: "wait", time: 500 },
+                              { action: "clear" },
+                              { action: "color", color: [0,0,0]}
+                            ];
+                            lcd.execute(action)
+                            .then(() => {
+                              log.verbose(PROCESS, "Requesting picture & code");
+                              readerClient.get(readerTakePicture, function(err, req, res, body) {
+                                if (err) {
+                                  n(new Error("Error invoking CoreReader: " + err.statusCode));
+                                  return;
+                                } else {
+                                  log.verbose(PROCESS, "Requesting picture & code invoked with result: %j", body);
+                                  if (body.result == "Success") {
+                                    truckid = body.code;
+                                    if (truckid !== selectedTruck) {
+                                      action = [
+                                        { action: "on" },
+                                        { action: "write", color: [255,0,0], text: "Unknown code:\n" + truckid },
+                                        { action: "wait", time: 5000 },
+                                        { action: "clear" },
+                                        { action: "color", color: [0,0,0]},
+                                        { action: "off" }
+                                      ];
+                                      truckid = _.noop();
+                                    } else {
+                                      action = [
+                                        { action: "on" },
+                                        { action: "write", color: [0,255,0], text: "Code read:\n" + truckid },
+                                        { action: "wait", time: 5000 },
+                                        { action: "clear" },
+                                        { action: "color", color: [0,0,0]},
+                                        { action: "off" }
+                                      ];
+                                    }
+                                  } else if (body.result == "Failure") {
                                     action = [
                                       { action: "on" },
-                                      { action: "write", color: [255,0,0], text: "Unknown code:\n" + truckid },
+                                      { action: "write", color: [255,0,0], text: body.message },
                                       { action: "wait", time: 5000 },
                                       { action: "clear" },
                                       { action: "color", color: [0,0,0]},
@@ -601,41 +633,43 @@ async.series( {
                                   } else {
                                     action = [
                                       { action: "on" },
-                                      { action: "write", color: [0,255,0], text: "Code read:\n" + truckid },
+                                      { action: "write", color: [255,0,255], text: body.message },
                                       { action: "wait", time: 5000 },
                                       { action: "clear" },
                                       { action: "color", color: [0,0,0]},
                                       { action: "off" }
                                     ];
+                                    truckid = _.noop();
+                                  }
+                                  lcd.execute(action)
+                                  .then(() => { n(); return;})
+                                }
+                              });// .catch(() => { n("Error taking picture");return; });
+                            })
+  //                           .catch(() => { n("LCD request completed with errors");return; });
+  //                           .catch(() => { n();return; });  
+                          } else {
+                            // LCD is not available!
+                            log.verbose(PROCESS, "[LCD disabled] Requesting picture & code");
+                            readerClient.get(readerTakePicture, function(err, req, res, body) {
+                              if (err) {
+                                n(new Error("[LCD disabled] Error invoking CoreReader: " + err.statusCode));
+                                return;
+                              } else {
+                                log.verbose(PROCESS, "[LCD disabled] Requesting picture & code invoked with result: %j", body);
+                                if (body.result == "Success") {
+                                  truckid = body.code;
+                                  if (truckid !== selectedTruck) {
+                                    truckid = _.noop();
                                   }
                                 } else if (body.result == "Failure") {
-                                  action = [
-                                    { action: "on" },
-                                    { action: "write", color: [255,0,0], text: body.message },
-                                    { action: "wait", time: 5000 },
-                                    { action: "clear" },
-                                    { action: "color", color: [0,0,0]},
-                                    { action: "off" }
-                                  ];
-                                  truckid = _.noop();
-                                } else {
-                                  action = [
-                                    { action: "on" },
-                                    { action: "write", color: [255,0,255], text: body.message },
-                                    { action: "wait", time: 5000 },
-                                    { action: "clear" },
-                                    { action: "color", color: [0,0,0]},
-                                    { action: "off" }
-                                  ];
                                   truckid = _.noop();
                                 }
-                                lcd.execute(action)
-                                .then(() => { n(); return;})
+                                n();
+                                return;
                               }
                             });// .catch(() => { n("Error taking picture");return; });
-                          })
-//                           .catch(() => { n("LCD request completed with errors");return; });
-//                           .catch(() => { n();return; });
+                          }
                         },
                         sendAlert: (n) => {
                           if (truckid) {
